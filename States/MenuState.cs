@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FillTheCup.Controls;
+using FillTheCup.World_elems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,9 +22,9 @@ namespace FillTheCup.States
             var buttonTxC = _content.Load<Texture2D>("Controls/btn_c");
             var buttonFont = _content.Load<SpriteFont>("Fonts/Menu");
 
-            var newGameButton = new Button(buttonTxUnc, buttonFont)
+            var newGameButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
-                Position = new Vector2(300, 200),
+                Position = new Vector2(graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)graphicsDevice.Viewport.Height/1.8f),
                 Text = "Start",
             };
 
@@ -31,9 +32,9 @@ namespace FillTheCup.States
 
 
 
-            var QuitButton = new Button(buttonTxUnc, buttonFont)
+            var QuitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
-                Position = new Vector2(300, 300),
+                Position = new Vector2(graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)graphicsDevice.Viewport.Height / 1.4f),
                 Text = "Quit",
             };
 
@@ -69,7 +70,7 @@ namespace FillTheCup.States
 
         public override void PostUpdate(GameTime gameTime)
         {
-            //remove sprites - TODO!!!!
+
         }
 
         public override void Update(GameTime gameTime)

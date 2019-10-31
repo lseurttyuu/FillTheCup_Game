@@ -14,27 +14,22 @@ namespace FillTheCup.Controls
         #region Fields
 
         private MouseState _currentMouse;
-
         private SpriteFont _font;
-
         private bool _isHovering;
-
         private MouseState _previousMouse;
-
         private Texture2D _texture;
+        private Texture2D _texture_c;
+        private Texture2D _texture_visible;
 
         #endregion
+
 
         #region Properties
 
         public event EventHandler Click;
-
         public bool Clicked { get; private set; }
-
         public Color PenColour { get; set; }
-
         public Vector2 Position { get; set; }
-
         public Rectangle Rectangle
         {
             get
@@ -47,25 +42,25 @@ namespace FillTheCup.Controls
 
         #endregion
 
+
         #region Methods
 
-        public Button(Texture2D texture, SpriteFont font)
+        public Button(Texture2D texture, Texture2D texture_c, SpriteFont font)
         {
             _texture = texture;
-
+            _texture_c = texture_c;
             _font = font;
-
             PenColour = Color.Black;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var colour = Color.White;
-
             if (_isHovering)
-                colour = Color.Gray;
+                _texture_visible = _texture_c;
+            else
+                _texture_visible = _texture;
 
-            spriteBatch.Draw(_texture, Rectangle, colour);
+            spriteBatch.Draw(_texture_visible, Rectangle, Color.White);
 
             if (!string.IsNullOrEmpty(Text))
             {
