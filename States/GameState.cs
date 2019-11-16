@@ -14,124 +14,41 @@ namespace FillTheCup.States
     public class GameState : State
     {
 
-        private List<Component> _components;                    //not used now!
+        //private List<Component> _components;                  //not used now!
         private List<Component> _flowers;
-        private Texture2D _background;                                
+        private Texture2D _background;
+        private Texture2D _background_grass;
+        private Texture2D _tap_open;
+        private Texture2D _tap_closed;
+        private SpriteFont _font;
+        private Level _level;
 
+        private int _innerState;                                //variable resposible for states: begining (counter), choice+animation, lvl end screen
+        private float _timeElapsed;                             //gametime to measure start screen 3.. 2.. 1..
+        private int _lvlDifficulty = 1;                         //single level difficulty (number of cups)
 
-        #region phsx
-        private readonly World _world;
-        private Body _groundBody;
-        private Texture2D _dropTex;
-        private Texture2D _cupSprite;
-        private Vector2 _mainCupOrigin;
-        private Random random;
-        private List<Component> _drops;
-
-
-
-        //TEMP SECTION
-
-        private Body _groundBody2;
-        private Texture2D _cupSprite2;
-        private Vector2 _mainCupOrigin2;
-        private Body _groundBody3;
-        private Texture2D _cupSprite3;
-        private Vector2 _mainCupOrigin3;
-
-
-
-
-        #endregion
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
+
+            _innerState = new int();
+            _innerState = 0;
+
+            _timeElapsed = new float();
+            _timeElapsed = 0f;
+
+
             _background = _content.Load<Texture2D>("World/background");
-            
+            _background_grass = _content.Load<Texture2D>("World/background_grass");
+            _tap_open = _content.Load<Texture2D>("World/tap_open");
+            _tap_closed = _content.Load<Texture2D>("World/tap_closed");
+            _font = _content.Load<SpriteFont>("Fonts/Menu");
+
+
             _flowers = new List<Component>();
 
             for(int i=0; i<9; i++)
-                _flowers.Add(new Flower(_content.Load<Texture2D>("World/flower_" + (i + 1)), graphicsDevice.Viewport.Width));
-
-
-            #region TestPhysics
-
-            random = new Random();
-
-            _dropTex = _content.Load<Texture2D>("World/drop_tx");
-            _drops = new List<Component>();
-            
-
-            _world = new World(new Vector2(0, 16));
-
-
-
-            
-
-
-
-            _cupSprite = new Texture2D(graphicsDevice, 200, 10);
-
-            Color[] data = new Color[200 * 10];
-            for (int i = 0; i < data.Length; ++i)
-                data[i] = Color.Chocolate;
-            _cupSprite.SetData(data);
-
-            _mainCupOrigin = new Vector2(_cupSprite.Width / 2, _cupSprite.Height / 2);
-
-
-            _cupSprite2 = new Texture2D(graphicsDevice, 10, 300);
-
-            Color[] data2 = new Color[300 * 10];
-            for (int i = 0; i < data2.Length; ++i)
-                data2[i] = Color.Chocolate;
-            _cupSprite2.SetData(data2);
-
-            _mainCupOrigin2 = new Vector2(_cupSprite2.Width / 2, _cupSprite2.Height / 2);
-
-
-            _cupSprite3 = new Texture2D(graphicsDevice, 10, 300);
-            _cupSprite3.SetData(data2);
-
-
-
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(64f);     //64 pixels = 1 meter when it comes to simulation
-
-
-
-
-
-
-            Vector2 groundPosition = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f, graphicsDevice.Viewport.Height / 2f)) + new Vector2(0, 1.25f);
-            Vector2 groundPosition2 = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f - 100, graphicsDevice.Viewport.Height / 2f - 150)) + new Vector2(0, 1.25f);
-            Vector2 groundPosition3 = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f + 100, graphicsDevice.Viewport.Height / 2f - 150)) + new Vector2(0, 1.25f);
-
-            _groundBody = BodyFactory.CreateRectangle(_world, ConvertUnits.ToSimUnits(200f), ConvertUnits.ToSimUnits(10f), 1f, groundPosition);
-            _groundBody.BodyType = BodyType.Static;
-            _groundBody.Restitution = 0.3f;
-            _groundBody.Friction = 0.5f;
-
-
-            _groundBody2 = BodyFactory.CreateRectangle(_world, ConvertUnits.ToSimUnits(10f), ConvertUnits.ToSimUnits(300f), 1f, groundPosition2);
-            _groundBody2.BodyType = BodyType.Static;
-            _groundBody2.Restitution = 0.3f;
-            _groundBody2.Friction = 0.5f;
-
-
-            _groundBody3 = BodyFactory.CreateRectangle(_world, ConvertUnits.ToSimUnits(10f), ConvertUnits.ToSimUnits(300f), 1f, groundPosition3);
-            _groundBody3.BodyType = BodyType.Static;
-            _groundBody3.Restitution = 0.3f;
-            _groundBody3.Friction = 0.5f;
-
-
-
-            #endregion
-
-
-            //TEMP!!!!
-
-
-
+                _flowers.Add(new Flower(_content.Load<Texture2D>("World/flower_" + (i + 1)), _graphicsDevice.Viewport.Width));
 
 
         }
@@ -141,27 +58,35 @@ namespace FillTheCup.States
 
             spriteBatch.Begin();
 
+
             spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
 
-            foreach (var flower in _flowers)
+
+            if (_innerState == 0)
+                if((int)_timeElapsed==3)
+                    spriteBatch.DrawString(_font, "Go!", new Vector2(100, 100), Color.White);
+                else
+                    spriteBatch.DrawString(_font, (3 - (int)_timeElapsed).ToString(), new Vector2(100, 100), Color.White);
+
+            if(_innerState > 0)
             {
-                flower.Draw(gameTime, spriteBatch);
+                foreach (var flower in _flowers)
+                    flower.Draw(gameTime, spriteBatch);
+
+
+                spriteBatch.Draw(_background_grass, new Vector2(0, _graphicsDevice.Viewport.Height - _background_grass.Height), Color.White);
+
+                _level.Draw(gameTime, spriteBatch);
+
             }
+           
 
+            
 
-
-
-            #region physx
-            spriteBatch.Draw(_cupSprite, ConvertUnits.ToDisplayUnits(_groundBody.Position), null, Color.White, 0f, _mainCupOrigin, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_cupSprite2, ConvertUnits.ToDisplayUnits(_groundBody2.Position), null, Color.White, 0f, _mainCupOrigin2, 1f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(_cupSprite3, ConvertUnits.ToDisplayUnits(_groundBody3.Position), null, Color.White, 0f, _mainCupOrigin2, 1f, SpriteEffects.None, 0f);
-
-            foreach (var drop in _drops)
-            {
-                drop.Draw(gameTime, spriteBatch);
-            }
-
-            #endregion
+            if (_innerState > 1)
+                spriteBatch.Draw(_tap_open, new Vector2(_graphicsDevice.Viewport.Width - _tap_open.Width, 0), Color.White);
+            else
+                spriteBatch.Draw(_tap_closed, new Vector2(_graphicsDevice.Viewport.Width - _tap_closed.Width, 0), Color.White);
 
 
 
@@ -176,31 +101,21 @@ namespace FillTheCup.States
         public override void Update(GameTime gameTime)
         {
 
-            #region physxxx
-            _drops.Add(new Drop(_dropTex,_graphicsDevice, _world, random.Next(-10,10)));
-            _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
-
-            //foreach(Drop drop in _drops.ToArray())
-            //{
-            //    if(drop.CheckPos())
-            //    {
-             //       _drops.Remove(drop);
-             //   }
-            //}
-
-
-            for (int i = _drops.Count - 1; i >= 0; i--)
+            _timeElapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f;
+            if (_timeElapsed > 4 && _innerState == 0)
             {
-                if (_drops[i].CheckPos())
-                    _drops.RemoveAt(i);
-
+                _level = new Level(_game, _graphicsDevice, _content, _lvlDifficulty);
+                _innerState++;
+                _timeElapsed = 0;
             }
+            
 
-
-
-            #endregion
-
+            if(_innerState > 0)
+            {
+                _level.Update(gameTime);
+            }
+                
 
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))

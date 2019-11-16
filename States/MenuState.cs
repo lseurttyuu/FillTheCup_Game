@@ -20,7 +20,7 @@ namespace FillTheCup.States
 
             var newGameButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
-                Position = new Vector2(graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)graphicsDevice.Viewport.Height/1.8f),
+                Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height/1.8f),
                 Text = "Start",
             };
 
@@ -30,7 +30,7 @@ namespace FillTheCup.States
 
             var QuitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
-                Position = new Vector2(graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)graphicsDevice.Viewport.Height / 1.4f),
+                Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height / 1.4f),
                 Text = "Quit",
             };
 
