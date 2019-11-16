@@ -28,12 +28,13 @@ namespace FillTheCup.World_elems
             _dropOrigin = new Vector2(_dropSprite.Width / 2, _dropSprite.Height / 2);
 
 
-            Vector2 _dropPosition = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f, graphicsDevice.Viewport.Height / 2f) + new Vector2(_variance,0)) + new Vector2(0, -5f);
+            Vector2 _dropPosition = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f, graphicsDevice.Viewport.Height / 5f) + new Vector2(_variance,0));
 
 
             _drop = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(6), 1, _dropPosition, BodyType.Dynamic);
-            _drop.Restitution = 0.3f;
-            _drop.Friction = 0.5f;
+            _drop.Restitution = 0.5f;
+            _drop.Friction = 0f;
+            _drop.ApplyForce(new Vector2(0, 8));
 
 
 
