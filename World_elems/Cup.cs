@@ -17,14 +17,17 @@ namespace FillTheCup.World_elems
 
         #region cupdef
         //All numbers below should be even!
-        private static readonly int _cup_X = 104;
-        private static readonly int _cup_Y = 128;               //static dimensions of a cup
+        public static readonly int _cup_X = 104;
+        public static readonly int _cup_Y = 128;                //static dimensions of a cup
+
+        public readonly int _posX;
+        public readonly int _posY;
 
         private static readonly int _minDistanceBottom = 8;
         private static readonly int _maxDistanceTop = 20;       //static restrictions of joining point height related to a cup (vertical restrictions)
 
-        private static readonly int _pipeWidth = 40;            //outer dimensions!
-        private static readonly int _lineWidth = 4;
+        public static readonly int _pipeWidth = 40;             //outer dimensions!
+        public static readonly int _lineWidth = 4;
         private static readonly int _partsNumber = 5;
 
 
@@ -47,39 +50,54 @@ namespace FillTheCup.World_elems
         {
             random = new Random();
 
+            _posX = posX;
+            _posY = posY;
             _cupParts = new List<Body>();
             _cupSprites = new List<Texture2D>();
             _colorSprites = new List<Color[]>();
             _cupOrigins = new List<Vector2>();
             _partsPositions = new List<Vector2>();
 
-            _cupSprites.Add(new Texture2D(graphicsDevice, _cup_X, _lineWidth));                                         //bottom line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(posX, posY + (_cup_Y - _lineWidth) / 2)));          //bottom line
-            _colorSprites.Add(new Color[_cup_X * _lineWidth]);                                                          //bottom line
+            _cupSprites.Add(new Texture2D(graphicsDevice, _cup_X, _lineWidth));                                           //bottom line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX, _posY + (_cup_Y - _lineWidth) / 2)));          //bottom line
+            _colorSprites.Add(new Color[_cup_X * _lineWidth]);                                                            //bottom line
 
 
 
             int pipeA_relative_Y = random.Next((_maxDistanceTop + _pipeWidth / 2)/2, (_cup_Y - _minDistanceBottom - _pipeWidth / 2)/2);
-            int pipeB_relative_Y = random.Next((_maxDistanceTop + _pipeWidth / 2)/2, (_cup_Y - _minDistanceBottom - _pipeWidth / 2)/2);
+            int pipeB_relative_Y = 0;
+            do
+            {
+                pipeB_relative_Y = random.Next((_maxDistanceTop + _pipeWidth / 2) / 2, (_cup_Y - _minDistanceBottom - _pipeWidth / 2) / 2);
+
+            } while (Math.Abs(pipeA_relative_Y-pipeB_relative_Y)<(_pipeWidth-3*_lineWidth)/2);
+
+
             pipeA_relative_Y *= 2;
             pipeB_relative_Y *= 2;
 
 
             _cupSprites.Add(new Texture2D(graphicsDevice, _lineWidth, pipeA_relative_Y-_pipeWidth/2+_lineWidth));                                                                       //top left line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(posX-(_cup_X-_lineWidth)/2, posY - _cup_Y / 2 + (pipeA_relative_Y - _pipeWidth / 2 + _lineWidth) / 2)));            //top left line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX-(_cup_X-_lineWidth)/2, _posY - _cup_Y / 2 + (pipeA_relative_Y - _pipeWidth / 2 + _lineWidth) / 2)));            //top left line
             _colorSprites.Add(new Color[_lineWidth * (pipeA_relative_Y - _pipeWidth / 2 + _lineWidth)]);                                                                                //top left line
 
             _cupSprites.Add(new Texture2D(graphicsDevice, _lineWidth, _cup_Y-pipeA_relative_Y-_pipeWidth/2+_lineWidth));                                                                //bottom left line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(posX - (_cup_X - _lineWidth) / 2,posY+_cup_Y/2-(_cup_Y - pipeA_relative_Y - _pipeWidth / 2 + _lineWidth)/2)));      //bottom left line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX - (_cup_X - _lineWidth) / 2,_posY+_cup_Y/2-(_cup_Y - pipeA_relative_Y - _pipeWidth / 2 + _lineWidth)/2)));      //bottom left line
             _colorSprites.Add(new Color[_lineWidth * (_cup_Y - pipeA_relative_Y - _pipeWidth / 2 + _lineWidth)]);                                                                       //bottom left line
 
             _cupSprites.Add(new Texture2D(graphicsDevice, _lineWidth, pipeB_relative_Y - _pipeWidth / 2 + _lineWidth));                                                                 //top right line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(posX + (_cup_X - _lineWidth) / 2, posY - _cup_Y / 2 + (pipeB_relative_Y - _pipeWidth / 2 + _lineWidth) / 2)));      //top right line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX + (_cup_X - _lineWidth) / 2, _posY - _cup_Y / 2 + (pipeB_relative_Y - _pipeWidth / 2 + _lineWidth) / 2)));      //top right line
             _colorSprites.Add(new Color[_lineWidth * (pipeB_relative_Y - _pipeWidth / 2 + _lineWidth)]);                                                                                //top right line
 
             _cupSprites.Add(new Texture2D(graphicsDevice, _lineWidth, _cup_Y - pipeB_relative_Y - _pipeWidth / 2 + _lineWidth));                                                        //bottom right line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(posX + (_cup_X - _lineWidth) / 2, posY+_cup_Y/2-(_cup_Y - pipeB_relative_Y - _pipeWidth / 2 + _lineWidth) /2)));    //bottom right line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX + (_cup_X - _lineWidth) / 2, _posY+_cup_Y/2-(_cup_Y - pipeB_relative_Y - _pipeWidth / 2 + _lineWidth) /2)));    //bottom right line
             _colorSprites.Add(new Color[_lineWidth * (_cup_Y - pipeB_relative_Y - _pipeWidth / 2 + _lineWidth)]);                                                                       //bottom right line
+
+
+            _pipeA_X = _posX - (_cup_X + _lineWidth) / 2;
+            _pipeA_Y = _posY - _cup_Y / 2 + pipeA_relative_Y;
+            _pipeB_X = _posX + (_cup_X - _lineWidth) / 2;
+            _pipeB_Y = _posY - _cup_Y / 2 + pipeB_relative_Y;
 
 
             for(int j=0; j<_partsNumber; j++)
@@ -125,5 +143,6 @@ namespace FillTheCup.World_elems
         {
             throw new NotImplementedException();
         }
+
     }
 }
