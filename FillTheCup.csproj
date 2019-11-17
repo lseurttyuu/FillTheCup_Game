@@ -73,8 +73,11 @@
     <Compile Include="States\MenuState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="World_elems\Cup.cs" />
+    <Compile Include="World_elems\Cup_last.cs" />
     <Compile Include="World_elems\Drop.cs" />
     <Compile Include="World_elems\Flower.cs" />
+    <Compile Include="World_elems\Pipe.cs" />
+    <Compile Include="World_elems\PipeAB_1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

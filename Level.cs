@@ -10,6 +10,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Utilities;
 using FillTheCup.World_elems;
 
+
 namespace FillTheCup
 {
     public class Level
@@ -26,7 +27,8 @@ namespace FillTheCup
         private bool _endLvl;                                       //if level ended - trigger next state in GameState
 
         private readonly World _physxWorld;
-        private List<Component> _cups;
+        private List<Cup> _cupsNormal;
+        private List<Cup_last> _cupsLast;
         private List<Component> _drops;
         private Texture2D _dropTex;
 
@@ -35,6 +37,7 @@ namespace FillTheCup
 
         private Random random;
 
+        Pipe _testPipe;                                             //TO BE REPLACED WITH A LIST!
 
         #endregion
 
@@ -46,14 +49,13 @@ namespace FillTheCup
             _content = content;
             _graphicsDevice = graphicsDevice;
             random = new Random();
-            _hasChosen = new bool();
             _hasChosen = false;
 
-            _updateCounter = new int();
             _updateCounter = 0;
 
 
-            _cups = new List<Component>();
+            _cupsNormal = new List<Cup>();
+            _cupsLast = new List<Cup_last>();
             _dropTex = _content.Load<Texture2D>("World/drop_tx");
             _drops = new List<Component>();
               
@@ -66,28 +68,29 @@ namespace FillTheCup
             switch (difficulty)
             {
                 case 1:
-                    _cups.Add(new Cup(_physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f)));
-                    _cups.Add(new Cup(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
-                    _cups.Add(new Cup(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
+                    _cupsNormal.Add(new Cup(_physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f)));
+                    _cupsLast.Add(new Cup_last(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
+                    _cupsLast.Add(new Cup_last(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
+                    _testPipe = new PipeAB_1(_physxWorld, graphicsDevice, _cupsNormal[0]._pipeA_X, _cupsNormal[0]._pipeA_Y, _cupsLast[0]._posX, -1);         //TO BE DELETED
                     break;
 
                 default:    break;
             }
 
-
-
+            
 
         }
 
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach(var cup in _cups)
-            {
+            foreach (var cup in _cupsNormal)
                 cup.Draw(gameTime, spriteBatch);
-            }
 
+            foreach (var cup in _cupsLast)
+                cup.Draw(gameTime, spriteBatch);
 
+            _testPipe.Draw(gameTime,spriteBatch);                       //TO BE DELETED
 
 
 
