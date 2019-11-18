@@ -51,15 +51,18 @@ namespace FillTheCup.World_elems
             _pipeOrigins = new List<Vector2>();
             _partsPositions = new List<Vector2>();
 
-            _topLineWidth = _startX - _endX + _lineWidth / 2 + _pipeWidth / 2;
-            _bottomLineWidth = _startX - _endX + (3 * _lineWidth) / 2 - _pipeWidth / 2;
+            
 
             if (_pipeType == -1)
+            {
+                _topLineWidth = _startX - _endX + _lineWidth / 2 + _pipeWidth / 2;
+                _bottomLineWidth = _startX - _endX + (3 * _lineWidth) / 2 - _pipeWidth / 2;
                 ConstructPipeA(graphicsDevice);
+            }
             else
             {
-                _topLineWidth *= -1;
-                _bottomLineWidth *= -1;
+                _topLineWidth = _endX - _startX + _lineWidth / 2 + _pipeWidth / 2;
+                _bottomLineWidth = _endX - _startX + (3 * _lineWidth) / 2 - _pipeWidth / 2;
                 ConstructPipeB(graphicsDevice);
             }
 
@@ -117,7 +120,6 @@ namespace FillTheCup.World_elems
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX - (_pipeWidth - _lineWidth) / 2, _startY - _pipeWidth / 2 + (graphicsDevice.Viewport.Height / 24 + _pipeWidth - _lineWidth) / 2)));   //vertical left line
             _colorSprites.Add(new Color[_lineWidth * (graphicsDevice.Viewport.Height / 24 + _pipeWidth - _lineWidth)]);                                                                 //vertical left line
 
-
             _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, graphicsDevice.Viewport.Height / 24));                                                                       //vertical right line
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX + (_pipeWidth - _lineWidth) / 2, _startY + _pipeWidth / 2 - _lineWidth + graphicsDevice.Viewport.Height / 48)));   //vertical right line
             _colorSprites.Add(new Color[_lineWidth * graphicsDevice.Viewport.Height / 24]);                                                                                         //vertical right line
@@ -126,7 +128,21 @@ namespace FillTheCup.World_elems
 
         private void ConstructPipeB(GraphicsDevice graphicsDevice)
         {
-            throw new NotImplementedException();
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _topLineWidth, _lineWidth));                                                                                 //top line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX - _lineWidth / 2 + _topLineWidth / 2, _startY - (_pipeWidth - _lineWidth) / 2)));           //top line
+            _colorSprites.Add(new Color[_topLineWidth * _lineWidth]);                                                                                                   //top line
+
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _bottomLineWidth, _lineWidth));                                                                           //bottom line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX - _lineWidth / 2 + _bottomLineWidth / 2, _startY + (_pipeWidth - _lineWidth) / 2)));     //bottom line
+            _colorSprites.Add(new Color[_bottomLineWidth * _lineWidth]);
+
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, graphicsDevice.Viewport.Height / 24 + _pipeWidth - _lineWidth));                                                 //vertical left line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX + (_pipeWidth - _lineWidth) / 2, _startY - _pipeWidth / 2 + (graphicsDevice.Viewport.Height / 24 + _pipeWidth - _lineWidth) / 2)));   //vertical left line
+            _colorSprites.Add(new Color[_lineWidth * (graphicsDevice.Viewport.Height / 24 + _pipeWidth - _lineWidth)]);                                                                 //vertical left line
+
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, graphicsDevice.Viewport.Height / 24));                                                                       //vertical right line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX - (_pipeWidth - _lineWidth) / 2, _startY + _pipeWidth / 2 - _lineWidth + graphicsDevice.Viewport.Height / 48)));   //vertical right line
+            _colorSprites.Add(new Color[_lineWidth * graphicsDevice.Viewport.Height / 24]);                                                                                         //vertical right line
         }
     }
 }
