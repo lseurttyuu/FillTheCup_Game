@@ -33,11 +33,12 @@ namespace FillTheCup
         private Texture2D _dropTex;
 
         private int _updateCounter;
-        private static readonly int _dropsStrength = 3;             // the higher number - the more drops are generated (irruptive); has to be > 0, otherwise no drops will be generated
+        private static readonly int _dropsStrength = 2;             // the higher number - the more drops are generated (irruptive); has to be > 0, otherwise no drops will be generated
 
         private Random random;
 
         Pipe _testPipe;                                             //TO BE REPLACED WITH A LIST!
+        Pipe _testPipe2;                                            //TO BE REPLACED WITH A LIST!
 
         #endregion
 
@@ -72,6 +73,7 @@ namespace FillTheCup
                     _cupsLast.Add(new Cup_last(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
                     _cupsLast.Add(new Cup_last(_physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f)));
                     _testPipe = new PipeAB_1(_physxWorld, graphicsDevice, _cupsNormal[0]._pipeA_X, _cupsNormal[0]._pipeA_Y, _cupsLast[0]._posX, -1);         //TO BE DELETED
+                    _testPipe2 = new PipeAB_1(_physxWorld, graphicsDevice, _cupsNormal[0]._pipeB_X, _cupsNormal[0]._pipeB_Y, _cupsLast[1]._posX, 0);         //TO BE DELETED
                     break;
 
                 default:    break;
@@ -90,7 +92,8 @@ namespace FillTheCup
             foreach (var cup in _cupsLast)
                 cup.Draw(gameTime, spriteBatch);
 
-            _testPipe.Draw(gameTime,spriteBatch);                       //TO BE DELETED
+            _testPipe.Draw(gameTime, spriteBatch);                       //TO BE DELETED
+            _testPipe2.Draw(gameTime, spriteBatch);                       //TO BE DELETED
 
 
 
