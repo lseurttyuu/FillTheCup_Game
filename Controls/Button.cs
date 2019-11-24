@@ -87,10 +87,6 @@ namespace FillTheCup.Controls
             }
         }
 
-        public override bool CheckPos()
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }

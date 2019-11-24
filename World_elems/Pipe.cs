@@ -12,8 +12,6 @@ namespace FillTheCup.World_elems
     public abstract class Pipe : Component
     {
 
-        public abstract override bool CheckPos();
-
         public abstract override void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
         public abstract override void Update(GameTime gameTime);

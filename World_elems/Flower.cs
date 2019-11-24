@@ -33,9 +33,6 @@ namespace FillTheCup.World_elems
             //nothing to be done
         }
 
-        public override bool CheckPos()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
