@@ -34,7 +34,8 @@ namespace FillTheCup.World_elems
             _drop = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(6), 1, _dropPosition, BodyType.Dynamic);
             _drop.Restitution = 0.5f;
             _drop.Friction = 0f;
-            _drop.ApplyForce(new Vector2(0, 8));
+            _drop.Mass = 0.01f;
+            _drop.ApplyForce(new Vector2(0, 5));
 
 
 

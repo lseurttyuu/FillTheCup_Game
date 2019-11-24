@@ -26,8 +26,8 @@ namespace FillTheCup
         public bool _hasChosen = false;                                    //for 2 states: choice (0) and animation (1)
         public int _cupChosen = 0;                                  //to be filled with number of a cup that has been choosen
         private int _cupWon = 0;
-        private bool _hasWon = false;                                       //information to know what trigger after particular level is finished
-        private bool _endLvl = false;                                       //if level ended - trigger next state in GameState
+        public bool _hasWon = false;                                       //information to know what trigger after particular level is finished
+        public bool _endLvl = false;                                       //if level ended - trigger next state in GameState
 
         private readonly World _physxWorld;
         private List<Cup> _cups;
@@ -38,7 +38,7 @@ namespace FillTheCup
         private Texture2D _tap_closed;
 
         private int _updateCounter;
-        private static readonly int _dropsStrength = 2;             // the higher number - the more drops are generated (irruptive); has to be > 0, otherwise no drops will be generated
+        private static readonly int _dropsStrength = 3;             // the lower number - the more drops are generated (linearly) - from 1 to inf;
 
 
         private Random random;
@@ -83,7 +83,8 @@ namespace FillTheCup
 
 
             //add cups - different difficulty level - different number of cups
-            switch (difficulty)
+            //switch (difficulty)
+            switch(1)
             {
                 case 1:
                     _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
@@ -136,18 +137,16 @@ namespace FillTheCup
                 if (_gameState._innerState == 1)
                     _gameState._innerState++;
 
+                _updateCounter++;
 
-
-                if (_updateCounter < _dropsStrength)
+                if (_updateCounter==_dropsStrength)
                 {
                     _drops.Add(new Drop(_dropTex, _graphicsDevice, _physxWorld, random.Next(-10, 10)));
-                    _updateCounter++;
-                }
-                else
                     _updateCounter = 0;
-
+                }
                 
-                if(_endLvl == false)
+
+                if (_endLvl == false)
                 {
                     if (_cupWon == 0)
                     {
@@ -165,7 +164,7 @@ namespace FillTheCup
                                     drops_inside++;
                                 }
                             }
-                            if (drops_inside > 80)
+                            if (drops_inside > 86)
                             {
                                 _cupWon = currentCup;
                                 break;

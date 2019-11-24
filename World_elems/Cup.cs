@@ -173,7 +173,8 @@ namespace FillTheCup.World_elems
 
         public override void Update(GameTime gameTime)
         {
-            _clicker.Update(gameTime);
+            if(!_level._endLvl)
+                _clicker.Update(gameTime);
         }
 
 
