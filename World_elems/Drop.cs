@@ -13,7 +13,7 @@ namespace FillTheCup.World_elems
 {
     class Drop : Component
     {
-        private Body _drop;
+        public Body _drop;
         private Texture2D _dropSprite;
         private Vector2 _dropOrigin;
 
@@ -52,7 +52,7 @@ namespace FillTheCup.World_elems
         }
 
 
-        public override bool CheckPos()
+        public bool CheckPos()
         {
             int posX = (int)ConvertUnits.ToDisplayUnits(_drop.Position.X);
             int maxY = (int)(-0.1650390625 * posX + 700);
