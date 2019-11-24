@@ -21,25 +21,25 @@ namespace FillTheCup.States
             var newGameButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
                 Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height/1.8f),
-                Text = "Start",
+                Text = "New game",
             };
 
             newGameButton.Click += newGameButton_Click;
 
 
 
-            var QuitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
+            var ExitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
                 Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height / 1.4f),
-                Text = "Quit",
+                Text = "Exit",
             };
 
-            QuitButton.Click += QuitButton_Click;
+            ExitButton.Click += QuitButton_Click;
 
             _components = new List<Component>()
             {
                 newGameButton,
-                QuitButton,
+                ExitButton,
             };
         }
 
@@ -50,8 +50,9 @@ namespace FillTheCup.States
 
         private void newGameButton_Click(object sender, EventArgs e)
         {
+            GameState._lvlDifficulty = 1;
+            GameState._totalScore = 0;
             _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
-
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
