@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="Component.cs" />
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\PauseBoard.cs" />
+    <Compile Include="Controls\TransBoard.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
@@ -73,7 +75,6 @@
     <Compile Include="States\MenuState.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="World_elems\Cup.cs" />
-    <Compile Include="World_elems\Cup_last.cs" />
     <Compile Include="World_elems\Drop.cs" />
     <Compile Include="World_elems\Flower.cs" />
     <Compile Include="World_elems\Pipe.cs" />
