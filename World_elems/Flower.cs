@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,12 +14,20 @@ namespace FillTheCup.World_elems
         public Vector2 Position { get; set; }
 
 
-        public Flower(Texture2D texture, int windowSizeX)
+        public Flower(List<int> randomNumbers, Texture2D texture, GraphicsDevice graphicsDevice)
         {
             _texture = texture;
 
-            int posX = random.Next(windowSizeX - 2 * _texture.Width) + _texture.Width;          //random placing of flowers - a subject to change
-            Position = new Vector2(posX, (int)(-0.1650390625* posX + 600));
+            int smallPositionX;
+
+            do
+            {
+                smallPositionX = random.Next(1, 18);
+            } while (randomNumbers.Contains(smallPositionX));
+            randomNumbers.Add(smallPositionX);
+
+
+            Position = new Vector2(smallPositionX*(int)(graphicsDevice.Viewport.Width/18.618), (int)(0.03* smallPositionX*graphicsDevice.Viewport.Width / 18.618 + graphicsDevice.Viewport.Height/1.35));
         }
 
 
