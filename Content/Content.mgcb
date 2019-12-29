@@ -96,6 +96,18 @@
 /processorParam:TextureFormat=Color
 /build:World/background_grass.png
 
+#begin World/bckg_grass_bar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:World/bckg_grass_bar.png
+
 #begin World/drop_tx.png
 /importer:TextureImporter
 /processor:TextureProcessor
