@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Utilities;
-
+//TO BE DONE: shorten pipes (vertically) to ensure compatibility!!!
 namespace FillTheCup.World_elems
 {
     class PipeAB_1 : Pipe

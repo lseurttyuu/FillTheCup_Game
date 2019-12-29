@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FillTheCup.Component" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Component.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Game1" Collapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEEAAAAAABwAAAAAAAAAAAAAAAAgAAAAAAAACABQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Level" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAAgAABAAAgADgAAAAABEAASAwAAEAAQCAAACABQ=</HashCode>
+      <FileName>Level.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Program" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Controls.Button" Collapsed="true">
+    <Position X="1" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAwAAAAgAQAAAgAgAgAAAAAAAAqgACAAAAAACAAAAgA=</HashCode>
+      <FileName>Controls\Button.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Controls.PauseBoard" Collapsed="true">
+    <Position X="14.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controls\PauseBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.Controls.TransBoard">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgABABCQEBBAACABAAAAAQAAIEACAAQ=</HashCode>
+      <FileName>Controls\TransBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.States.GameState" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAACAAAAAAiAAAIRAAQAABAAAAAAAAAAAIQAAAAE=</HashCode>
+      <FileName>States\GameState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.States.MenuState">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAIgAAAABAAAAAAAAAAAAAgAAAAAAACAA=</HashCode>
+      <FileName>States\MenuState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.States.State" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgABAABAAABAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>States\State.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.World_elems.Cup" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAxAAAGIAAgBAAhAAAYAAAAAgQIAACAQAQECAQAA=</HashCode>
+      <FileName>World_elems\Cup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.World_elems.Drop">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAIAAAEAAAAAAAAAAAAEACAAAA=</HashCode>
+      <FileName>World_elems\Drop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.World_elems.Flower">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAAgAgAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>World_elems\Flower.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.World_elems.Pipe" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>World_elems\Pipe.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FillTheCup.World_elems.PipeAB_1" Collapsed="true">
+    <Position X="5.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAgAACAAAgBAAAAAAIAAAAAEBABAAADKAASAABA=</HashCode>
+      <FileName>World_elems\PipeAB_1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

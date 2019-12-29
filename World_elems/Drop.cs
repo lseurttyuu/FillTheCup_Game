@@ -13,6 +13,7 @@ namespace FillTheCup.World_elems
 {
     class Drop : Component
     {
+        GraphicsDevice _graphicsDevice;
         public Body _drop;
         private Texture2D _dropSprite;
         private Vector2 _dropOrigin;
@@ -21,14 +22,14 @@ namespace FillTheCup.World_elems
 
         public Drop(Texture2D dropSprite ,GraphicsDevice graphicsDevice, World _world, int variance)
         {
-            int _variance = variance;
+            _graphicsDevice = graphicsDevice;
             _dropSprite = dropSprite;
 
 
             _dropOrigin = new Vector2(_dropSprite.Width / 2, _dropSprite.Height / 2);
 
 
-            Vector2 _dropPosition = ConvertUnits.ToSimUnits(new Vector2(graphicsDevice.Viewport.Width / 2f, graphicsDevice.Viewport.Height / 5f) + new Vector2(_variance,0));
+            Vector2 _dropPosition = ConvertUnits.ToSimUnits(new Vector2(_graphicsDevice.Viewport.Width / 2f, _graphicsDevice.Viewport.Height / 5f) + new Vector2(variance,0));
 
 
             _drop = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(6), 1, _dropPosition, BodyType.Dynamic);
@@ -56,7 +57,7 @@ namespace FillTheCup.World_elems
         public bool CheckPos()
         {
             int posX = (int)ConvertUnits.ToDisplayUnits(_drop.Position.X);
-            int maxY = (int)(-0.1650390625 * posX + 700);
+            int maxY = (int)(0.03 * posX + _graphicsDevice.Viewport.Height/1.12);
             if (ConvertUnits.ToDisplayUnits(_drop.Position.Y) > maxY)
             {
                 _drop.Enabled = false;

@@ -79,6 +79,7 @@
     <Compile Include="World_elems\Flower.cs" />
     <Compile Include="World_elems\Pipe.cs" />
     <Compile Include="World_elems\PipeAB_1.cs" />
+    <Compile Include="World_elems\Timer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -93,6 +94,7 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
