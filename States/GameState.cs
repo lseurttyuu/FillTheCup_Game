@@ -22,6 +22,7 @@ namespace FillTheCup.States
         private SpriteFont _fontCounter;
         private Level _level;
         private TransBoard _transBoard;
+        
         public static int _totalScore = 0;
         private int _score = 0;
 
@@ -29,6 +30,8 @@ namespace FillTheCup.States
         private float _timeElapsed = 0f;                             //gametime to measure start screen 3.. 2.. 1..
         private float _timeStamp = 0f;
         public static int _lvlDifficulty = 1;                         //single level difficulty (number of cups)
+        public static int _globalLvlDifficulty = 1;                     //1 - easy, 2 - medium, 3 - hard (time restriction)
+        private float _maxPlayerTime;
 
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
@@ -37,11 +40,19 @@ namespace FillTheCup.States
             _background_grass = _content.Load<Texture2D>("World/background_grass");
             _fontCounter = _content.Load<SpriteFont>("Fonts/Counter");
 
-
+            List<int> randomNumbersFlowers = new List<int>();
             _flowers = new List<Component>();
 
             for(int i=0; i<9; i++)
-                _flowers.Add(new Flower(_content.Load<Texture2D>("World/flower_" + (i + 1)), _graphicsDevice.Viewport.Width));
+                _flowers.Add(new Flower(randomNumbersFlowers, _content.Load<Texture2D>("World/flower_" + (i + 1)), _graphicsDevice));
+
+            //time restriction definition
+            if (_globalLvlDifficulty == 1)
+                _maxPlayerTime = 10;
+            else if (_globalLvlDifficulty == 2)
+                _maxPlayerTime = 5;
+            else
+                _maxPlayerTime = 3;
 
 
         }
@@ -68,22 +79,19 @@ namespace FillTheCup.States
 
                     
             }
-                
 
-            if(_innerState > 0)
-            {
+
+            if (_innerState > 0)
                 foreach (var flower in _flowers)
                     flower.Draw(gameTime, spriteBatch);
 
+            spriteBatch.Draw(_background_grass, new Vector2(0, _graphicsDevice.Viewport.Height - _background_grass.Height), Color.White);
 
-                spriteBatch.Draw(_background_grass, new Vector2(0, _graphicsDevice.Viewport.Height - _background_grass.Height), Color.White);
-
+            if (_innerState > 0)
                 _level.Draw(gameTime, spriteBatch);
 
-            }
 
-
-            if(_innerState == 4)
+            if (_innerState == 4)
             {
                 _transBoard.Draw(gameTime, spriteBatch);
             }
@@ -116,10 +124,16 @@ namespace FillTheCup.States
             
 
 
-            if (_timeElapsed > 5 && _level._hasChosen==false && _innerState!=0 && _innerState<3)
+            if (_innerState != 0 && _innerState < 3 && _timeElapsed > _maxPlayerTime && _level._hasChosen==false)
                 _innerState = 3;
             else if(_level != null)
+            {
                 _level.Update(gameTime);
+                if(_level._endLvl ==false && _level._hasChosen == false)
+                    _level.UpdateBar(_timeElapsed, _maxPlayerTime);
+                    
+            }
+                
 
             if(_innerState == 3)
             {

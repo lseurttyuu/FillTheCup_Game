@@ -36,6 +36,10 @@ namespace FillTheCup
         private Texture2D _dropTex;
         private Texture2D _tap_open;
         private Texture2D _tap_closed;
+        private Texture2D _grassBar;
+        private Texture2D _bar;
+        private Vector2 _barPos;
+        private Timer _timer;
 
         private int _updateCounter;
         private static readonly int _dropsStrength = 3;             // the lower number - the more drops are generated (linearly) - from 1 to inf;
@@ -58,13 +62,28 @@ namespace FillTheCup
 
             _updateCounter = 0;
 
-
+            _timer = new Timer(_content, _graphicsDevice);
             _cups = new List<Cup>();
             _pipes = new List<Component>();
             _dropTex = _content.Load<Texture2D>("World/drop_tx");
             _drops = new List<Drop>();
             _tap_open = _content.Load<Texture2D>("World/tap_open");
             _tap_closed = _content.Load<Texture2D>("World/tap_closed");
+            _grassBar = _content.Load<Texture2D>("World/bckg_grass_bar");
+
+            int barWidth = (int)(_graphicsDevice.Viewport.Width / 2.85);
+            int barHeight = (int)(_graphicsDevice.Viewport.Height / 15.36);
+
+
+            _bar = new Texture2D(_graphicsDevice, barWidth, barHeight);
+            Color[] barColor = new Color[barWidth*barHeight];
+
+            for(int i=0; i < barColor.Length; ++i)
+               barColor[i] = Color.FromNonPremultiplied(0xFF, 0xFF, 0xDD, 255);
+
+            _bar.SetData(barColor);
+
+            _barPos = new Vector2((int)(_graphicsDevice.Viewport.Width / 2 - barWidth / 2), (int)(_graphicsDevice.Viewport.Height * 0.920572917));
 
 
             _physxWorld = new World(new Vector2(0, 20));                //new physics connected world (strong gravity 16g)
@@ -104,6 +123,11 @@ namespace FillTheCup
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+
+
+            spriteBatch.Draw(_bar, _barPos, Color.White);
+            spriteBatch.Draw(_grassBar, new Vector2(0, _graphicsDevice.Viewport.Height - _grassBar.Height), Color.White);
+            _timer.Draw(gameTime, spriteBatch);
 
 
             #region temp1
@@ -164,7 +188,7 @@ namespace FillTheCup
                                     drops_inside++;
                                 }
                             }
-                            if (drops_inside > 86)
+                            if (drops_inside > 85)
                             {
                                 _cupWon = currentCup;
                                 break;
@@ -190,6 +214,8 @@ namespace FillTheCup
 
 
                     }
+
+                    //time bar to be updated
                 }
                 
                 
@@ -228,6 +254,12 @@ namespace FillTheCup
             }
             #endregion
 
+        }
+
+        public void UpdateBar(float timeElapsed, float maxPlayerTime)
+        {
+            _barPos.X = (int)(_graphicsDevice.Viewport.Width / 2 - _bar.Width / 2 - _bar.Width*timeElapsed/maxPlayerTime);
+            _timer.UpdateTime(timeElapsed, maxPlayerTime);
         }
     }
 }
