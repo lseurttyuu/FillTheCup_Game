@@ -17,6 +17,7 @@ namespace FillTheCup.World_elems
         public Body _drop;
         private Texture2D _dropSprite;
         private Vector2 _dropOrigin;
+        private static Random random = new Random();
 
 
 
@@ -32,11 +33,12 @@ namespace FillTheCup.World_elems
             Vector2 _dropPosition = ConvertUnits.ToSimUnits(new Vector2(_graphicsDevice.Viewport.Width / 2f, _graphicsDevice.Viewport.Height / 5f) + new Vector2(variance,0));
 
 
-            _drop = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(6), 1, _dropPosition, BodyType.Dynamic);
+            _drop = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(5), 1, _dropPosition, BodyType.Dynamic);               //radius was 6!
             _drop.Restitution = 0.5f;
             _drop.Friction = 0f;
             _drop.Mass = 0.01f;
             _drop.ApplyForce(new Vector2(0, 5));
+            //_drop.ApplyForce(new Vector2((float)(random.Next(-10,11))/50, 0));
 
 
 

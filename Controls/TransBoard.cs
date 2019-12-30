@@ -130,10 +130,11 @@ namespace FillTheCup.Controls
         {
             if (!_hasWon)
             {
-                GameState._lvlDifficulty = 1;
+                GameState._lvlDifficulty = 0;
                 GameState._totalScore = 0;
             }
 
+            GameState._lvlDifficulty++;
             _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
         }
 

@@ -96,8 +96,8 @@ namespace FillTheCup.World_elems
                 _cupParts.Add(null);
                 _cupParts[i] = BodyFactory.CreateRectangle(world, ConvertUnits.ToSimUnits(_cupSprites[i].Width), ConvertUnits.ToSimUnits(_cupSprites[i].Height), 1f, _partsPositions[i]);
                 _cupParts[i].BodyType = BodyType.Static;
-                _cupParts[i].Restitution = 0.5f;
-                _cupParts[i].Friction = 0.5f;
+                _cupParts[i].Restitution = 0.5f;              //was 0.5
+                _cupParts[i].Friction = 0.5f;                 //was 0.5
             }
 
 
@@ -139,7 +139,7 @@ namespace FillTheCup.World_elems
             _colorSprites.Add(new Color[_lineWidth * (_cup_Y - pipeB_relative_Y - _pipeWidth / 2 + _lineWidth)]);                                                                       //bottom right line
 
 
-            _pipeA_X = _posX - (_cup_X + _lineWidth) / 2;
+            _pipeA_X = _posX - (_cup_X - _lineWidth) / 2;
             _pipeA_Y = _posY - _cup_Y / 2 + pipeA_relative_Y;
             _pipeB_X = _posX + (_cup_X - _lineWidth) / 2;
             _pipeB_Y = _posY - _cup_Y / 2 + pipeB_relative_Y;
