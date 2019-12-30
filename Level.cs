@@ -86,7 +86,7 @@ namespace FillTheCup
             _barPos = new Vector2((int)(_graphicsDevice.Viewport.Width / 2 - barWidth / 2), (int)(_graphicsDevice.Viewport.Height * 0.920572917));
 
 
-            _physxWorld = new World(new Vector2(0, 20));                //new physics connected world (strong gravity 16g)
+            _physxWorld = new World(new Vector2(0, 25));                //new physics connected world (strong gravity 25g)
             ConvertUnits.SetDisplayUnitToSimUnitRatio(64f);             //64 pixels = 1 meter when it comes to simulation
 
 
@@ -103,17 +103,121 @@ namespace FillTheCup
 
             //add cups - different difficulty level - different number of cups
             //switch (difficulty)
-            switch(1)
+            switch(difficulty)
             {
                 case 1:
                     _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
                     _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 2));
                     _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
-                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1));
-                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, false, false));
+                    break;
+                case 2:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, true));
+                    break;
+                case 3:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    break;
+                case 4:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.8f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 5.6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, (int)(graphicsDevice.Viewport.Width / 2f), 0, true, true));
+                    break;
+                case 5:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, false, false));
+                    break;
+                case 6:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.55f), (int)(graphicsDevice.Viewport.Height / 1.95f), 3, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, true, false));
+                    break;
+                case 7:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.4f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.75f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 6));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeA_X, _cups[2]._pipeA_Y, _cups[5]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeB_X, _cups[2]._pipeB_Y, (int)(graphicsDevice.Viewport.Width / 1.2f), 0, true, true));
+                    break;
+                case 8:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.4f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.75f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 6));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeA_X, _cups[2]._pipeA_Y, _cups[5]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeB_X, _cups[2]._pipeB_Y, (int)(graphicsDevice.Viewport.Width / 1.2f), 0, true, true));
+                    break;
+                case 9:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.4f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.75f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 6));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.2f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 7));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeA_X, _cups[2]._pipeA_Y, _cups[5]._posX, -1, false, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeB_X, _cups[2]._pipeB_Y, _cups[6]._posX, 0, false, false));
                     break;
 
-                default:    break;
+                default:
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 3.3f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 2));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.4f), (int)(graphicsDevice.Viewport.Height / 1.95f), 5, 3));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 6f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 4));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 2.4f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 5));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.75f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 6));
+                    _cups.Add(new Cup(this, _physxWorld, graphicsDevice, (int)(graphicsDevice.Viewport.Width / 1.2f), (int)(graphicsDevice.Viewport.Height / 1.45f), 3, 7));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeA_X, _cups[0]._pipeA_Y, _cups[1]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[0]._pipeB_X, _cups[0]._pipeB_Y, _cups[2]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeA_X, _cups[1]._pipeA_Y, _cups[3]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[1]._pipeB_X, _cups[1]._pipeB_Y, _cups[4]._posX, 0, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeA_X, _cups[2]._pipeA_Y, _cups[5]._posX, -1, true, false));
+                    _pipes.Add(new PipeAB_1(_physxWorld, graphicsDevice, _cups[2]._pipeB_X, _cups[2]._pipeB_Y, _cups[6]._posX, 0, true, false));
+                    GameState._maxPlayerTime *= 0.95f;
+                    break;
             }
 
             
@@ -137,12 +241,13 @@ namespace FillTheCup
             }
 
             #endregion
+            foreach (var pipe in _pipes)
+                pipe.Draw(gameTime, spriteBatch);
 
             foreach (var cup in _cups)
                 cup.Draw(gameTime, spriteBatch);
             
-            foreach (var pipe in _pipes)
-                pipe.Draw(gameTime, spriteBatch);
+            
 
             if (_hasChosen)
                 spriteBatch.Draw(_tap_open, new Vector2(_graphicsDevice.Viewport.Width - _tap_open.Width, 0), Color.White);
@@ -152,7 +257,6 @@ namespace FillTheCup
 
 
         }
-
         public void Update(GameTime gameTime)
         {
 
@@ -165,7 +269,7 @@ namespace FillTheCup
 
                 if (_updateCounter==_dropsStrength)
                 {
-                    _drops.Add(new Drop(_dropTex, _graphicsDevice, _physxWorld, random.Next(-10, 10)));
+                    _drops.Add(new Drop(_dropTex, _graphicsDevice, _physxWorld, random.Next(-15, 16)));                 //bigger drops variety (start position)
                     _updateCounter = 0;
                 }
                 
@@ -188,7 +292,7 @@ namespace FillTheCup
                                     drops_inside++;
                                 }
                             }
-                            if (drops_inside > 85)
+                            if (drops_inside > 130)                      //here was 86
                             {
                                 _cupWon = currentCup;
                                 break;
