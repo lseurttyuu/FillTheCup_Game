@@ -41,7 +41,11 @@ namespace FillTheCup.World_elems
 
         public void UpdateTime(float timeElapsed, float maxPlayerTime)
         {
-            _timeView = (maxPlayerTime-timeElapsed-0.02).ToString("F2", CultureInfo.CurrentCulture);
+            float timeFix = (float)(maxPlayerTime - timeElapsed - 0.02);
+            if (timeFix < 0)
+                timeFix = 0;
+
+            _timeView = timeFix.ToString("F2", CultureInfo.CurrentCulture);
             _timeView += " s";
         }
     }
