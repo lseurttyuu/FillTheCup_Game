@@ -87,6 +87,12 @@ namespace FillTheCup.Controls
             }
         }
 
+        public void UpdateSelectTexture(Texture2D selected, Texture2D unselected)
+        {
+            _texture_c = selected;
+            _texture = unselected;
+        }
+
         #endregion
     }
 }
