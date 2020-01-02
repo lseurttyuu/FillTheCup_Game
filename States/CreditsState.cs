@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,31 @@ namespace FillTheCup.States
 {
     class CreditsState : State
     {
+        #region Fields
+
         private Texture2D _background;
         private SpriteFont _levelTitle;
         private SpriteFont _smallerFont;
-        Button _backButton;
+        private Button _backButton;
+        private Song _creditsMusic;
+
+        #endregion
+
+        #region Methods
 
         public CreditsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             _background = new Texture2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
             _levelTitle = _content.Load<SpriteFont>("Fonts/Subtitles");
             _smallerFont = _content.Load<SpriteFont>("Fonts/Smaller");
+            _creditsMusic = _content.Load<Song>("audio/music/credits");
+
+
+            MediaPlayer.Stop();
+            MediaPlayer.Play(_creditsMusic);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 1.0f;
+            _game._musicPlaying = -1;
 
 
             var buttonTxUnc = _content.Load<Texture2D>("Controls/btn_unc_small");
@@ -57,8 +73,11 @@ namespace FillTheCup.States
 
             spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(_levelTitle, "Credits", new Vector2(_graphicsDevice.Viewport.Width / 2.9f, _graphicsDevice.Viewport.Height / 80f), Color.White);
+            spriteBatch.DrawString(_smallerFont, "Author", new Vector2(_graphicsDevice.Viewport.Width / 15f, _graphicsDevice.Viewport.Height / 4.4f), Color.White);
+            spriteBatch.DrawString(_smallerFont, "lseurttyuu", new Vector2(_graphicsDevice.Viewport.Width / 3f, _graphicsDevice.Viewport.Height / 4.4f), Color.White);
+            spriteBatch.DrawString(_smallerFont, "Music", new Vector2(_graphicsDevice.Viewport.Width / 15f, _graphicsDevice.Viewport.Height / 3.7f), Color.White);
+            spriteBatch.DrawString(_smallerFont, "Bensound (Royalty free music)", new Vector2(_graphicsDevice.Viewport.Width / 3f, _graphicsDevice.Viewport.Height / 3.7f), Color.White);
             _backButton.Draw(gameTime, spriteBatch);
-            //to be filled when project finished
 
             spriteBatch.End();
         }
@@ -75,5 +94,7 @@ namespace FillTheCup.States
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
         }
+
+        #endregion
     }
 }
