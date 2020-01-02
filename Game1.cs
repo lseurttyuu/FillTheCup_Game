@@ -1,26 +1,27 @@
 ﻿using FillTheCup.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FillTheCup
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// Klasa definiująca całą grę zgodnie z wytycznymi frameworku Monogame
     /// </summary>
     public class Game1 : Game
     {
+        #region Fields
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         private State _currentState;
-
         private State _nextState;
+        public short _musicPlaying = -2;          //means not playing anything
 
-        public void ChangeState(State state)
-        {
-            _nextState = state;
-        }
+        #endregion
 
+        #region Methods
 
 
         public Game1()
@@ -32,78 +33,75 @@ namespace FillTheCup
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Pozwala grze na wykonanie dowolnej inicjalizacji przed uruchomieniem.
+        /// W tym miejscu można wyszukiwać dowolne wymagane usługi (treści) i je załadować.
         /// </summary>
         protected override void Initialize()
         {
+            Texture2D cursor = Content.Load<Texture2D>("Controls/cursor");
+            Mouse.SetCursor(MouseCursor.FromTexture2D(cursor, 0, 0));
             IsMouseVisible = true;
 
             base.Initialize();
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// LoadContentjest uruchamiany tylko raz i pozwala załadować
+        /// wszystkie zdefiniowane treści.
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            spriteBatch = new SpriteBatch(GraphicsDevice);                              // Create a new SpriteBatch, which can be used to draw textures.
             _currentState = new MenuState(this, graphics.GraphicsDevice, Content);
-
         }
 
         /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
+        /// UnloadContent pozwala zwolnić zasoby związane z grą.
+        /// Ta funkcja jest uruchamiana tylko 1 raz.
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            //Unload any non ContentManager content here
+        }
+
+
+        public void ChangeState(State state)
+        {
+            _nextState = state;
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        /// Umożliwia działanie całej logiki w grze, takiej jak aktualizowanie świata,
+        /// sprawdzanie kolizji, zbieranie danych wejściowych i odtwarzanie dźwięku.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Parametr pozwala uzyskać czas gry (moment).</param>
         protected override void Update(GameTime gameTime)
         {
-            // if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //   Exit();
-
-
             if (_nextState != null)
             {
                 _currentState = _nextState;
                 _nextState = null;
             }
 
-
             _currentState.Update(gameTime);
-            _currentState.PostUpdate(gameTime);
-
-
-            // TODO: Add your update logic here
+            _currentState.PostUpdate(gameTime);         //Function now unused;
 
             base.Update(gameTime);
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// Funkcja odpowiedzialna za rysowanie wszelkich elementów.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param name="gameTime">Parametr pozwala uzyskać czas gry (moment).</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             _currentState.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }
+
+        #endregion
     }
 }

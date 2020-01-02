@@ -27,10 +27,7 @@ namespace FillTheCup.States
         }
         public abstract void Update(GameTime gameTime);
 
-
-
         #endregion
-
 
     }
 }

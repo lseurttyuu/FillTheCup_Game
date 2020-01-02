@@ -13,7 +13,7 @@ namespace FillTheCup.World_elems
 {
     class PipeAB_1 : Pipe
     {
-        #region pipedef
+        #region PipeDefinition
 
         private int _startX;
         private int _startY;
@@ -48,6 +48,8 @@ namespace FillTheCup.World_elems
         #endregion
 
 
+        #region Methods
+
         public PipeAB_1(World world, GraphicsDevice graphicsDevice, int startX, int startY, int endX, int pipeType, bool canBlock, bool mustBlock)
         {
             _startX = startX;
@@ -64,43 +66,6 @@ namespace FillTheCup.World_elems
             _pipeOrigins = new List<Vector2>();
             _partsPositions = new List<Vector2>();
 
-            _isBlockade = Convert.ToBoolean(random.Next(0, 2));
-            if (_mustBlock)
-                _isBlockade = true;
-            if (!_canBlock)
-                _isBlockade = false;
-
-            if(_isBlockade)
-            {
-                short blockadeType = (short)random.Next(0, 2);          //0 --> horizontal, 1 --> vertical;
-                if (Convert.ToBoolean(blockadeType))                    //vertical blockade
-                {
-                    _blockadeOrigin = new Vector2(_lineWidth / 2, _pipeWidth / 2);
-                    _blockadePosition = ConvertUnits.ToSimUnits(new Vector2(_startX, _startY));
-
-                    _blockadeSprite = new Texture2D(graphicsDevice, _lineWidth, _pipeWidth);
-                }
-                else
-                {
-                    _blockadeOrigin = new Vector2(_pipeWidth / 2, _lineWidth / 2);
-                    _blockadePosition = ConvertUnits.ToSimUnits(new Vector2(_endX, _startY + _pipeWidth / 2 + (int)(graphicsDevice.Viewport.Height / 64) - _lineWidth));
-
-                    _blockadeSprite = new Texture2D(graphicsDevice, _pipeWidth, _lineWidth);
-                }
-
-                Color[] blockadeCol = new Color[_lineWidth * _pipeWidth];
-                for (int i = 0; i < blockadeCol.Length; ++i)
-                    blockadeCol[i] = Color.FromNonPremultiplied(0x46, 0x46, 0x46, 255);
-
-                _blockadeSprite.SetData(blockadeCol);
-
-                _blockadeBody = BodyFactory.CreateRectangle(world, ConvertUnits.ToSimUnits(_blockadeSprite.Width), ConvertUnits.ToSimUnits(_blockadeSprite.Height), 1f, _blockadePosition);
-                _blockadeBody.BodyType = BodyType.Static;
-                _blockadeBody.Restitution = 0.5f;
-                _blockadeBody.Friction = 0.5f;
-            }
-
-            
 
             if (_pipeType == -1)
             {
@@ -135,6 +100,44 @@ namespace FillTheCup.World_elems
                 _pipeParts[i].Friction = 0.5f;
             }
 
+            #region Blockade
+
+            _isBlockade = Convert.ToBoolean(random.Next(0, 2));
+            if (_mustBlock)
+                _isBlockade = true;
+            if (!_canBlock)
+                _isBlockade = false;
+
+            if (_isBlockade)
+            {
+                short blockadeType = (short)random.Next(0, 2);          //0 --> horizontal, 1 --> vertical;
+                if (Convert.ToBoolean(blockadeType))                    //vertical blockade
+                {
+                    _blockadeOrigin = new Vector2(_lineWidth / 2, _pipeWidth / 2);
+                    _blockadePosition = ConvertUnits.ToSimUnits(new Vector2(_startX, _startY));
+                    _blockadeSprite = new Texture2D(graphicsDevice, _lineWidth, _pipeWidth);
+                }
+                else
+                {
+                    _blockadeOrigin = new Vector2(_pipeWidth / 2, _lineWidth / 2);
+                    _blockadePosition = ConvertUnits.ToSimUnits(new Vector2(_endX, _startY + _pipeWidth / 2 + (int)(graphicsDevice.Viewport.Height / 64) - _lineWidth));
+                    _blockadeSprite = new Texture2D(graphicsDevice, _pipeWidth, _lineWidth);
+                }
+
+                Color[] blockadeCol = new Color[_lineWidth * _pipeWidth];
+                for (int i = 0; i < blockadeCol.Length; ++i)
+                    blockadeCol[i] = Color.FromNonPremultiplied(0x46, 0x46, 0x46, 255);
+
+                _blockadeSprite.SetData(blockadeCol);
+
+                _blockadeBody = BodyFactory.CreateRectangle(world, ConvertUnits.ToSimUnits(_blockadeSprite.Width), ConvertUnits.ToSimUnits(_blockadeSprite.Height), 1f, _blockadePosition);
+                _blockadeBody.BodyType = BodyType.Static;
+                _blockadeBody.Restitution = 0.5f;
+                _blockadeBody.Friction = 0.5f;
+            }
+
+            #endregion
+
         }
 
 
@@ -158,11 +161,11 @@ namespace FillTheCup.World_elems
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX + _lineWidth / 2 - (float)Math.Ceiling((double)_topLineWidth / 2), _startY - (_pipeWidth - _lineWidth) / 2)));   //top line
             _colorSprites.Add(new Color[_topLineWidth * _lineWidth]);                                                                                                   //top line
 
-            _pipeSprites.Add(new Texture2D(graphicsDevice, _bottomLineWidth, _lineWidth));                                                                           //bottom line
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _bottomLineWidth, _lineWidth));                                                                          //bottom line
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX + _lineWidth / 2 - (float)Math.Ceiling((double)_bottomLineWidth / 2), _startY + (_pipeWidth - _lineWidth) / 2)));     //bottom line
             _colorSprites.Add(new Color[_bottomLineWidth * _lineWidth]);                                                                                            //bottom line
 
-            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, (int)(graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth)));                                                 //vertical left line
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, (int)(graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth)));                                               //vertical left line
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX - (_pipeWidth - _lineWidth) / 2, _startY - _pipeWidth / 2 + (int)(graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth) / 2)));   //vertical left line
             _colorSprites.Add(new Color[_lineWidth * (int)(graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth)]);                                                                 //vertical left line
 
@@ -179,10 +182,10 @@ namespace FillTheCup.World_elems
             _colorSprites.Add(new Color[_topLineWidth * _lineWidth]);                                                                                                   //top line
 
             _pipeSprites.Add(new Texture2D(graphicsDevice, _bottomLineWidth, _lineWidth));                                                                           //bottom line
-            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX - _lineWidth / 2 + (float)Math.Floor((double)_bottomLineWidth / 2), _startY + (_pipeWidth - _lineWidth) / 2)));     //bottom line
-            _colorSprites.Add(new Color[_bottomLineWidth * _lineWidth]);                                                                                                    //bottom line
+            _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_startX - _lineWidth / 2 + (float)Math.Floor((double)_bottomLineWidth / 2), _startY + (_pipeWidth - _lineWidth) / 2)));    //bottom line
+            _colorSprites.Add(new Color[_bottomLineWidth * _lineWidth]);                                                                                             //bottom line
 
-            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, (int)(graphicsDevice.Viewport.Height / 64) + _pipeWidth - _lineWidth));                                                 //vertical left line
+            _pipeSprites.Add(new Texture2D(graphicsDevice, _lineWidth, (int)(graphicsDevice.Viewport.Height / 64) + _pipeWidth - _lineWidth));                                               //vertical left line
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX + (_pipeWidth - _lineWidth) / 2, _startY - _pipeWidth / 2 + (int)((graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth) / 2))));   //vertical left line
             _colorSprites.Add(new Color[_lineWidth * (int)(graphicsDevice.Viewport.Height / 64 + _pipeWidth - _lineWidth)]);                                                                 //vertical left line
 
@@ -190,5 +193,7 @@ namespace FillTheCup.World_elems
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_endX - (_pipeWidth - _lineWidth) / 2, _startY + -_lineWidth + (int)((_pipeWidth + graphicsDevice.Viewport.Height/64)/2))));   //vertical right line
             _colorSprites.Add(new Color[_lineWidth * (int)(graphicsDevice.Viewport.Height / 64)]);                                                                                         //vertical right line
         }
+
+        #endregion
     }
 }

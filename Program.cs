@@ -4,12 +4,12 @@ namespace FillTheCup
 {
 #if WINDOWS || LINUX
     /// <summary>
-    /// The main class.
+    /// Główna klasa
     /// </summary>
     public static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// Główny punkt wejścia do aplikacji.
         /// </summary>
         [STAThread]
         static void Main()

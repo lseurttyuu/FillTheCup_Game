@@ -14,10 +14,9 @@ namespace FillTheCup.World_elems
 {
     class Cup : Component
     {
+        #region Fields
 
-        protected Level _level;
-
-        #region cupdef
+        #region CupDefinition
         //All numbers below should be even!
         public static readonly int _cup_X = 104;
         public static readonly int _cup_Y = 128;                //static dimensions of a cup
@@ -32,9 +31,11 @@ namespace FillTheCup.World_elems
         public static readonly int _lineWidth = 4;
         private int _partsNumber;
 
+        #endregion
 
         private Button _clicker;
         private int _cupNumber;
+        protected Level _level;
 
         public int _pipeA_X;
         public int _pipeA_Y;                                   //coordinates to connect pipes (A - left pipe, B - right pipe)
@@ -51,11 +52,12 @@ namespace FillTheCup.World_elems
 
         #endregion
 
+
+        #region Methods
+
         public Cup(Level level, World world, GraphicsDevice graphicsDevice, int posX, int posY, int partsNumber, int cupNumber)
         {
             _level = level;
-            
-
             _partsNumber = partsNumber;
             _cupNumber = cupNumber;
             _posX = posX;
@@ -67,7 +69,6 @@ namespace FillTheCup.World_elems
             _partsPositions = new List<Vector2>();
             
             CreateButton(graphicsDevice, _posX, _posY);
-
 
             _cupSprites.Add(new Texture2D(graphicsDevice, _cup_X, _lineWidth));                                           //bottom line
             _partsPositions.Add(ConvertUnits.ToSimUnits(new Vector2(_posX, _posY + (_cup_Y - _lineWidth) / 2)));          //bottom line
@@ -90,16 +91,14 @@ namespace FillTheCup.World_elems
             }
             
 
-
             for (int i=0; i<_partsNumber; i++)
             {
                 _cupParts.Add(null);
                 _cupParts[i] = BodyFactory.CreateRectangle(world, ConvertUnits.ToSimUnits(_cupSprites[i].Width), ConvertUnits.ToSimUnits(_cupSprites[i].Height), 1f, _partsPositions[i]);
                 _cupParts[i].BodyType = BodyType.Static;
-                _cupParts[i].Restitution = 0.5f;              //was 0.5
-                _cupParts[i].Friction = 0.5f;                 //was 0.5
+                _cupParts[i].Restitution = 0.5f;
+                _cupParts[i].Friction = 0.5f;
             }
-
 
         }
 
@@ -163,9 +162,7 @@ namespace FillTheCup.World_elems
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for(int i=0; i<_partsNumber; i++)
-            {
                 spriteBatch.Draw(_cupSprites[i], ConvertUnits.ToDisplayUnits(_cupParts[i].Position), null, Color.White, 0f, _cupOrigins[i], 1f, SpriteEffects.None, 0f);
-            }
 
             _clicker.Draw(gameTime, spriteBatch);
             
@@ -213,5 +210,6 @@ namespace FillTheCup.World_elems
             _level._cupChosen = _cupNumber;
         }
 
+        #endregion
     }
 }

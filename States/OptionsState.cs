@@ -13,6 +13,8 @@ namespace FillTheCup.States
 {
     class OptionsState : State
     {
+        #region Fields
+
         private List<Button> _buttons;
 
         private Texture2D _background;
@@ -22,6 +24,10 @@ namespace FillTheCup.States
 
         private SpriteFont _levelTitle;
         private SpriteFont _smallerFont;
+
+        #endregion
+
+        #region Methods
 
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
@@ -75,6 +81,7 @@ namespace FillTheCup.States
                 hardButton,
                 backButton,
             };
+
 
             if(GameState._globalLvlDifficulty==1)
                 _buttons[0].UpdateSelectTexture(_selectedButton, _selectedButton);
@@ -151,5 +158,7 @@ namespace FillTheCup.States
 
 
         }
+
+        #endregion
     }
 }

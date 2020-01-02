@@ -7,13 +7,17 @@ namespace FillTheCup.World_elems
 {
     class Flower : Component
     {
+        #region Fields
 
         private Texture2D _texture;
         private static Random random = new Random();
 
+        #endregion
+
         public Vector2 Position { get; set; }
 
 
+        #region Methods
         public Flower(List<int> randomNumbers, Texture2D texture, GraphicsDevice graphicsDevice)
         {
             _texture = texture;
@@ -25,7 +29,6 @@ namespace FillTheCup.World_elems
                 smallPositionX = random.Next(1, 18);
             } while (randomNumbers.Contains(smallPositionX));
             randomNumbers.Add(smallPositionX);
-
 
             Position = new Vector2(smallPositionX*(int)(graphicsDevice.Viewport.Width/18.618), (int)(0.03* smallPositionX*graphicsDevice.Viewport.Width / 18.618 + graphicsDevice.Viewport.Height/1.35));
         }
@@ -39,9 +42,9 @@ namespace FillTheCup.World_elems
 
         public override void Update(GameTime gameTime)
         {
-            //nothing to be done
+            throw new NotImplementedException();
         }
 
-
+        #endregion
     }
 }

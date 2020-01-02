@@ -12,11 +12,16 @@ namespace FillTheCup.World_elems
 {
     class Timer : Component
     {
+        #region Fields
+
         SpriteFont _timeFont;
         protected ContentManager _content;
         protected GraphicsDevice _graphicsDevice;
         string _timeView;
 
+        #endregion
+
+        #region Methods
 
         public Timer(ContentManager content, GraphicsDevice graphicsDevice)
         {
@@ -31,7 +36,6 @@ namespace FillTheCup.World_elems
         {
             spriteBatch.DrawString(_timeFont, "Time", new Vector2((int)(_graphicsDevice.Viewport.Width / 5.5), (int)(_graphicsDevice.Viewport.Height / 1.1)), Color.White);
             spriteBatch.DrawString(_timeFont, _timeView, new Vector2((int)(_graphicsDevice.Viewport.Width / 1.45), (int)(_graphicsDevice.Viewport.Height / 1.1)), Color.White);
-
         }
 
         public override void Update(GameTime gameTime)
@@ -48,5 +52,7 @@ namespace FillTheCup.World_elems
             _timeView = timeFix.ToString("F2", CultureInfo.CurrentCulture);
             _timeView += " s";
         }
+
+        #endregion
     }
 }
