@@ -10,12 +10,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FillTheCup.Controls
 {
-    public class TransBoard : Component                     //Transitional class to show a screen between levels
+    /// <summary>
+    /// Klasa przejściowa, która jest odpowiedzialna za prezentację ekranu pomiędzy dwoma kolejnymi poziomami
+    /// </summary>
+    public class TransBoard : Component
     {
+
+        #region Fields
+
         string[] _infoText = { "Well done!", "Game over", "Score:", "Total score:","","" };
 
         protected ContentManager _content;
         protected Game1 _game;
+        protected Level _level;
         protected GraphicsDevice _graphicsDevice;
         private List<SpriteFont> _spriteFonts;              //From BIG ones to small ones; Just like in html - h0, h1, etc
         private Texture2D _layerTrans;
@@ -29,11 +36,14 @@ namespace FillTheCup.Controls
         private int _totalScore;
         private bool _hasWon;
 
+        #endregion
 
 
-        public TransBoard(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score, int totalScore, bool hasWon)
+        #region Methods
+        public TransBoard(Game1 game, Level level, GraphicsDevice graphicsDevice, ContentManager content, int score, int totalScore, bool hasWon)
         {
             _game = game;
+            _level = level;
             _graphicsDevice = graphicsDevice;
             _content = content;
             _hasWon = hasWon;
@@ -80,6 +90,7 @@ namespace FillTheCup.Controls
             Texture2D buttonTxC = _content.Load<Texture2D>("Controls/btn_c");
             SpriteFont buttonFont = _content.Load<SpriteFont>("Fonts/Menu");
 
+
             Button nextLevel = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
                 Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height / 1.8f),
@@ -96,7 +107,6 @@ namespace FillTheCup.Controls
             };
 
             newGame.Click += NextLevel_Click;
-
 
 
             Button quitLvl = new Button(buttonTxUnc, buttonTxC, buttonFont)
@@ -117,17 +127,19 @@ namespace FillTheCup.Controls
                 _buttons.Add(newGame);
             _buttons.Add(quitLvl);
 
-
-
         }
 
         private void QuitLvl_Click(object sender, EventArgs e)
         {
+            _level._waterStart.Stop();
+            _level._waterLoop.Stop();
             _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
         }
 
         private void NextLevel_Click(object sender, EventArgs e)
         {
+            _level._waterStart.Stop();
+            _level._waterLoop.Stop();
             if (!_hasWon)
             {
                 GameState._lvlDifficulty = 0;
@@ -146,8 +158,6 @@ namespace FillTheCup.Controls
             foreach (var component in _buttons)
                 component.Draw(gameTime, spriteBatch);
 
-            
-
             if (_hasWon)
             {
                 spriteBatch.DrawString(_spriteFonts[0], _infoText[0], new Vector2((_graphicsDevice.Viewport.Width - _spriteFonts[0].MeasureString(_infoText[0]).X) / 2, _graphicsDevice.Viewport.Height / 10f), Color.White);
@@ -163,8 +173,6 @@ namespace FillTheCup.Controls
                 spriteBatch.DrawString(_spriteFonts[1], _infoText[5], new Vector2(_graphicsDevice.Viewport.Width / 1.65f, _graphicsDevice.Viewport.Height / 2.75f), Color.White);
             }
             
-
-
         }
 
         public override void Update(GameTime gameTime)
@@ -172,5 +180,7 @@ namespace FillTheCup.Controls
             foreach (var component in _buttons)
                 component.Update(gameTime);
         }
+
+        #endregion
     }
 }

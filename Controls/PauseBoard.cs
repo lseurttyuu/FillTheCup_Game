@@ -13,7 +13,10 @@ namespace FillTheCup.Controls
     class PauseBoard : Component
     {
 
+        #region Fields
+
         protected Game1 _game;
+        protected Level _level;
         protected GameState _gameState;
         protected GraphicsDevice _graphicsDevice;
         protected ContentManager _content;
@@ -23,13 +26,18 @@ namespace FillTheCup.Controls
         private SpriteFont _levelTitle;
         private SpriteFont _smallerFont;
 
+        #endregion
 
-        public PauseBoard(Game1 game, GameState gameState, GraphicsDevice graphicsDevice, ContentManager content)
+        #region Methods
+
+        public PauseBoard(Game1 game, GameState gameState, Level level, GraphicsDevice graphicsDevice, ContentManager content)
         {
             _game = game;
+            _level = level;
             _graphicsDevice = graphicsDevice;
             _content = content;
             _gameState = gameState;
+            
 
             var buttonTxUnc = _content.Load<Texture2D>("Controls/btn_unc");
             var buttonTxC = _content.Load<Texture2D>("Controls/btn_c");
@@ -70,21 +78,29 @@ namespace FillTheCup.Controls
                 quitButton,
             };
 
-
-
         }
 
         private void QuitButton_Click(object sender, EventArgs e)
         {
+            if (_level != null)
+            {
+                _level._waterStart.Stop();
+                _level._waterLoop.Stop();
+            }
             _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
         }
 
         private void ResumeButton_Click(object sender, EventArgs e)
         {
-            if (_gameState._previousState == 1)
+            if (_level != null && _level._hasChosen)
             {
-                _gameState._timeElapsed += (float)((GameState._maxPlayerTime-_gameState._timeElapsed) * 0.3);
+                _level._soundFxState = 2;
+                _level._waterLoop.Play();
             }
+
+            if (_gameState._previousState == 1)
+                _gameState._timeElapsed += (float)((GameState._maxPlayerTime-_gameState._timeElapsed) * 0.3);
+
             _gameState._innerState = _gameState._previousState;
 
         }
@@ -104,5 +120,6 @@ namespace FillTheCup.Controls
             foreach (var component in _components)
                 component.Update(gameTime);
         }
+        #endregion
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Utilities;
@@ -14,8 +15,8 @@ namespace FillTheCup.States
 {
     public class GameState : State
     {
+        #region Fields
 
-        //private List<Component> _components;                  //not used now!
         private List<Component> _flowers;
         private Texture2D _background;
         private Texture2D _background_grass;
@@ -26,7 +27,9 @@ namespace FillTheCup.States
         private PauseBoard _pauseBoard;
         private KeyboardState _previousKeyboard = Keyboard.GetState();
         private KeyboardState _currentKeyboard = Keyboard.GetState();
-        
+        private List<Song> _music;
+        private static Random random = new Random();
+
         public static int _totalScore = 0;
         private int _score = 0;
 
@@ -41,6 +44,9 @@ namespace FillTheCup.States
         private readonly float _maxTimeMediumDef = 5;
         private readonly float _maxTimeHardDef = 3;
 
+        #endregion
+
+        #region Methods
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
@@ -49,23 +55,36 @@ namespace FillTheCup.States
             _fontCounter = _content.Load<SpriteFont>("Fonts/Counter");
             _lvlFont = _content.Load<SpriteFont>("Fonts/Menu");
 
+
             List<int> randomNumbersFlowers = new List<int>();
             _flowers = new List<Component>();
 
-            for(int i=0; i<9; i++)
+            for(short i=0; i<9; i++)
                 _flowers.Add(new Flower(randomNumbersFlowers, _content.Load<Texture2D>("World/flower_" + (i + 1)), _graphicsDevice));
 
             if (_lvlDifficulty == 1)
-            {
                 if (_globalLvlDifficulty == 1)
                     _maxPlayerTime = _maxTimeEasyDef;
                 else if (_globalLvlDifficulty == 2)
                     _maxPlayerTime = _maxTimeMediumDef;
                 else
                     _maxPlayerTime = _maxTimeHardDef;
-            }
-            
 
+            #region Music
+            _music = new List<Song>();
+
+            for (short i = 0; i < 5; i++)
+                _music.Add(_content.Load<Song>("audio/music/" + (i + 1)));
+
+            if (_game._musicPlaying < 1)
+            {
+                _game._musicPlaying = (short)(random.Next(_music.Count) + 1);
+                MediaPlayer.Stop();
+                MediaPlayer.Play(_music[_game._musicPlaying - 1]);
+                MediaPlayer.IsRepeating = false;
+                MediaPlayer.Volume = 1.0f;
+            }
+            #endregion
 
         }
 
@@ -89,6 +108,7 @@ namespace FillTheCup.States
             {
                 string[] counter = { (3 - (int)_timeElapsed).ToString(), "Go!" };
                 short final_count = 0;
+
                 if ((int)_timeElapsed == 3)
                     final_count = 1;
 
@@ -96,9 +116,7 @@ namespace FillTheCup.States
                 int posY = (_graphicsDevice.Viewport.Height - (int)_fontCounter.MeasureString(counter[final_count]).Y) / 2;
                 spriteBatch.DrawString(_fontCounter, counter[final_count], new Vector2(posX, posY), Color.Black);
 
-                    
             }
-
 
             if (_innerState > 0)
                 foreach (var flower in _flowers)
@@ -110,25 +128,32 @@ namespace FillTheCup.States
             if (_innerState > 0)
                 _level.Draw(gameTime, spriteBatch);
 
-
             if (_innerState == 4)
-            {
                 _transBoard.Draw(gameTime, spriteBatch);
-            }
            
-
-
-
             spriteBatch.End();
         }
 
         public override void PostUpdate(GameTime gameTime)
         {
-
+            
         }
 
         public override void Update(GameTime gameTime)
         {
+
+            if(MediaPlayer.State != MediaState.Playing)
+            {
+                _game._musicPlaying = (short)(random.Next(_music.Count)+1);
+                MediaPlayer.Stop();
+                MediaPlayer.Play(_music[_game._musicPlaying-1]);
+                MediaPlayer.IsRepeating = false;
+                MediaPlayer.Volume = 1.0f;
+            }
+
+
+            #region StatesHandling
+
             if (_innerState == -1)
                 _pauseBoard.Update(gameTime);
             else
@@ -151,6 +176,7 @@ namespace FillTheCup.States
             else if(_level != null && _innerState!=-1)
             {
                 _level.Update(gameTime);
+
                 if(_level._endLvl ==false && _level._hasChosen == false)
                     _level.UpdateBar(_timeElapsed, _maxPlayerTime);
                     
@@ -160,12 +186,13 @@ namespace FillTheCup.States
             if(_innerState == 3)
             {
                 _level._endLvl = true;
+
                 if (_level._hasWon)
                     _score = (400 + _lvlDifficulty * (100 - (int)(_timeStamp * 20)))*_globalLvlDifficulty;
+
                 _totalScore += _score;
-
-
-                _transBoard = new TransBoard(_game, _graphicsDevice, _content, _score, _totalScore, _level._hasWon);
+                
+                _transBoard = new TransBoard(_game, _level, _graphicsDevice, _content, _score, _totalScore, _level._hasWon);
                 _innerState++;
 
             }
@@ -175,33 +202,44 @@ namespace FillTheCup.States
                 _transBoard.Update(gameTime);
             }
 
+            #endregion
+
+
+            #region KeyboardEvents
 
             _previousKeyboard = _currentKeyboard;
             _currentKeyboard = Keyboard.GetState();
 
-            if (_previousKeyboard != _currentKeyboard)
-            {
-                if (_currentKeyboard.IsKeyDown(Keys.Escape))
+            if (_previousKeyboard != _currentKeyboard && _currentKeyboard.IsKeyDown(Keys.Escape))
+                if (_innerState != -1)
                 {
-                        if (_innerState != -1)
-                        {
-                            _previousState = _innerState;
-                            _innerState = -1;
-                            _pauseBoard = new PauseBoard(_game, this, _graphicsDevice, _content);
-                        }
-                        else
-                        {
-                            if (_previousState == 1)
-                            {
-                                _timeElapsed += (float)((_maxPlayerTime - _timeElapsed) * 0.3);
-                            }
-                        _innerState = _previousState;
-                        }
+                    if(_level != null)
+                    {
+                        _level._waterStart.Stop();
+                        _level._waterLoop.Stop();
+                    }
+                    
+                    _previousState = _innerState;
+                    _innerState = -1;
+                    _pauseBoard = new PauseBoard(_game, this, _level, _graphicsDevice, _content);
                 }
-            }
+                else
+                {
+                    if (_level != null && _level._hasChosen)
+                    {
+                        _level._soundFxState = 2;
+                        _level._waterLoop.Play();
+                    }
 
+                    if (_previousState == 1)
+                        _timeElapsed += (float)((_maxPlayerTime - _timeElapsed) * 0.3);
 
+                _innerState = _previousState;
+                }
+
+            #endregion
 
         }
+        #endregion
     }
 }

@@ -4,26 +4,34 @@ using FillTheCup.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace FillTheCup.States
 {
     public class MenuState : State
     {
+        #region Fields
+
         private List<Component> _components;
         private Texture2D _background;
         private Texture2D _backgroundGrass;
         private SpriteFont _titleFont;
+        private Song _menuMusic;
 
+        #endregion
+
+
+        #region Methods
 
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             var buttonTxUnc = _content.Load<Texture2D>("Controls/btn_unc");
             var buttonTxC = _content.Load<Texture2D>("Controls/btn_c");
             var buttonFont = _content.Load<SpriteFont>("Fonts/Menu");
-
+ 
             _background = _content.Load<Texture2D>("World/background");
             _backgroundGrass = _content.Load<Texture2D>("World/grass_menu");
-            _titleFont = content.Load<SpriteFont>("Fonts/Titles");
+            _titleFont = _content.Load<SpriteFont>("Fonts/Titles");
 
 
             var newGameButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
@@ -69,6 +77,30 @@ namespace FillTheCup.States
                 creditsButton,
                 ExitButton,
             };
+
+            #region Music
+
+            _menuMusic = _content.Load<Song>("audio/music/menu");
+
+            if (_game._musicPlaying == -2)
+            {
+                MediaPlayer.Play(_menuMusic);
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = 1.0f;
+            }
+            else if (_game._musicPlaying != 0)
+            {
+                MediaPlayer.Stop();
+                MediaPlayer.Play(_menuMusic);
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = 1.0f;
+
+            }
+            _game._musicPlaying = 0;
+
+            #endregion
+
+
         }
 
         private void CreditsButton_Click(object sender, EventArgs e)
@@ -118,5 +150,7 @@ namespace FillTheCup.States
             foreach (var component in _components)
                 component.Update(gameTime);
         }
+
+        #endregion
     }
 }

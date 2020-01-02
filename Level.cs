@@ -10,6 +10,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Utilities;
 using FillTheCup.World_elems;
 using FillTheCup.States;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FillTheCup
 {
@@ -24,7 +25,7 @@ namespace FillTheCup
         protected GraphicsDevice _graphicsDevice;
 
         public bool _hasChosen = false;                                    //for 2 states: choice (0) and animation (1)
-        public int _cupChosen = 0;                                  //to be filled with number of a cup that has been choosen
+        public int _cupChosen = 0;                                         //to be filled with number of a cup that has been choosen
         private int _cupWon = 0;
         public bool _hasWon = false;                                       //information to know what trigger after particular level is finished
         public bool _endLvl = false;                                       //if level ended - trigger next state in GameState
@@ -40,16 +41,19 @@ namespace FillTheCup
         private Texture2D _bar;
         private Vector2 _barPos;
         private Timer _timer;
+        private List<SoundEffect> _soundEffects;
+        public SoundEffectInstance _waterStart;
+        public SoundEffectInstance _waterLoop;
+        public short _soundFxState = 0;
 
         private int _updateCounter;
         private static readonly int _dropsStrength = 3;             // the lower number - the more drops are generated (linearly) - from 1 to inf;
-
 
         private Random random;
 
         #endregion
 
-
+        #region Methods
 
         public Level(GameState gameState, Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int difficulty)
         {
@@ -67,9 +71,20 @@ namespace FillTheCup
             _pipes = new List<Component>();
             _dropTex = _content.Load<Texture2D>("World/drop_tx");
             _drops = new List<Drop>();
+            _soundEffects = new List<SoundEffect>();
             _tap_open = _content.Load<Texture2D>("World/tap_open");
             _tap_closed = _content.Load<Texture2D>("World/tap_closed");
             _grassBar = _content.Load<Texture2D>("World/bckg_grass_bar");
+            _soundEffects.Add(_content.Load<SoundEffect>("audio/fx/water_start"));
+            _soundEffects.Add(_content.Load<SoundEffect>("audio/fx/water_loop"));
+            _waterStart = _soundEffects[0].CreateInstance();
+            _waterLoop = _soundEffects[1].CreateInstance();
+
+            _waterStart.IsLooped = false;
+            _waterStart.Volume = 0.3f;
+            _waterLoop.IsLooped = true;
+            _waterLoop.Volume = 0.3f;
+
 
             int barWidth = (int)(_graphicsDevice.Viewport.Width / 2.85);
             int barHeight = (int)(_graphicsDevice.Viewport.Height / 15.36);
@@ -89,21 +104,9 @@ namespace FillTheCup
             _physxWorld = new World(new Vector2(0, 25));                //new physics connected world (strong gravity 25g)
             ConvertUnits.SetDisplayUnitToSimUnitRatio(64f);             //64 pixels = 1 meter when it comes to simulation
 
+            #region LevelDefinitions
 
-
-            #region temp_button
-
-
-
-            #endregion
-
-
-
-
-
-            //add cups - different difficulty level - different number of cups
-            //switch (difficulty)
-            switch(difficulty)
+            switch (difficulty)
             {
                 case 1:
                     _cups.Add(new Cup(this, _physxWorld, graphicsDevice, graphicsDevice.Viewport.Width / 2, (int)(graphicsDevice.Viewport.Height / 2.9f), 5, 1));
@@ -220,27 +223,21 @@ namespace FillTheCup
                     break;
             }
 
-            
+            #endregion
+
 
         }
 
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
-
             spriteBatch.Draw(_bar, _barPos, Color.White);
             spriteBatch.Draw(_grassBar, new Vector2(0, _graphicsDevice.Viewport.Height - _grassBar.Height), Color.White);
             _timer.Draw(gameTime, spriteBatch);
 
-
-            #region temp1
             foreach (var drop in _drops)
-            {
                 drop.Draw(gameTime, spriteBatch);
-            }
 
-            #endregion
             foreach (var pipe in _pipes)
                 pipe.Draw(gameTime, spriteBatch);
 
@@ -248,18 +245,15 @@ namespace FillTheCup
                 cup.Draw(gameTime, spriteBatch);
             
             
-
             if (_hasChosen)
                 spriteBatch.Draw(_tap_open, new Vector2(_graphicsDevice.Viewport.Width - _tap_open.Width, 0), Color.White);
             else
                 spriteBatch.Draw(_tap_closed, new Vector2(_graphicsDevice.Viewport.Width - _tap_closed.Width, 0), Color.White);
 
-
-
         }
+
         public void Update(GameTime gameTime)
         {
-
             if (_hasChosen)
             {
                 if (_gameState._innerState == 1)
@@ -267,96 +261,73 @@ namespace FillTheCup
 
                 _updateCounter++;
 
-                if (_updateCounter==_dropsStrength)
+                if (_updateCounter == _dropsStrength)
                 {
-                    _drops.Add(new Drop(_dropTex, _graphicsDevice, _physxWorld, random.Next(-15, 16)));                 //bigger drops variety (start position)
+                    _drops.Add(new Drop(_dropTex, _graphicsDevice, _physxWorld, random.Next(-15, 16)));                 //bigger drops variety (horizontal start position)
                     _updateCounter = 0;
                 }
-                
+
 
                 if (_endLvl == false)
-                {
                     if (_cupWon == 0)
                     {
                         int currentCup = 1;
                         foreach (var cup in _cups)
                         {
                             int drops_inside = 0;
+
                             foreach (Drop drop in _drops)
-                            {
                                 if (ConvertUnits.ToDisplayUnits(drop._drop.Position).X > cup._posX - Cup._cup_X / 2 &&
                                     ConvertUnits.ToDisplayUnits(drop._drop.Position).X < cup._posX + Cup._cup_X / 2 &&
                                     ConvertUnits.ToDisplayUnits(drop._drop.Position).Y > cup._posY - Cup._cup_Y / 2 &&
                                     ConvertUnits.ToDisplayUnits(drop._drop.Position).Y < cup._posY + Cup._cup_Y / 2)
-                                {
                                     drops_inside++;
-                                }
-                            }
-                            if (drops_inside > 130)                      //here was 86
+                            
+                            if (drops_inside > 130)
                             {
                                 _cupWon = currentCup;
                                 break;
                             }
                             currentCup++;
                         }
-
                     }
                     else
                     {
                         _endLvl = true;
                         _gameState._innerState++;
+
                         if (_cupWon == _cupChosen)
-                        {
                             _hasWon = true;
-                            
-                        }
                         else
-                        {
                             _hasWon = false;
 
-                        }
-
-
                     }
-
-                    //time bar to be updated
+                
+                if (_soundFxState == 0)
+                {
+                    _waterStart.Play();
+                    _soundFxState++;
                 }
-                
-                
 
-
+                if (_soundFxState == 1 && _waterStart.State != SoundState.Playing)
+                {
+                    _waterLoop.Play();
+                    _soundFxState++;
+                }
 
             }
             else
-            {
                 foreach (var cup in _cups)
                     cup.Update(gameTime);
-            }
-
-
-            
-
-
-
-
-
-
 
 
 
             _physxWorld.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
 
-
-            #region temp3
-
             for (int i = _drops.Count - 1; i >= 0; i--)
-            {
                 if (_drops[i].CheckPos())
                     _drops.RemoveAt(i);
-            
-            }
-            #endregion
 
         }
 
@@ -365,5 +336,7 @@ namespace FillTheCup
             _barPos.X = (int)(_graphicsDevice.Viewport.Width / 2 - _bar.Width / 2 - _bar.Width*timeElapsed/maxPlayerTime);
             _timer.UpdateTime(timeElapsed, maxPlayerTime);
         }
+
+        #endregion
     }
 }
