@@ -11,7 +11,10 @@ using System.Threading.Tasks;
 
 namespace FillTheCup.States
 {
-    class OptionsState : State
+    /// <summary>
+    /// Klasa odpowiedzialna za wyświetlanie opcji w grze.
+    /// </summary>
+    public class OptionsState : State
     {
         #region Fields
 
@@ -29,6 +32,12 @@ namespace FillTheCup.States
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor klasy stanu z różnymi opcjami. Jest zgodny z klasą abstrakcyjną State.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             _background = new Texture2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
@@ -117,7 +126,7 @@ namespace FillTheCup.States
         {
             GameState._globalLvlDifficulty = 2;
             _buttons[1].UpdateSelectTexture(_selectedButton, _selectedButton);
-            _buttons[2].UpdateSelectTexture(_buttonTxUnc, _buttonTxUnc);
+            _buttons[2].UpdateSelectTexture(_buttonTxC, _buttonTxUnc);
             _buttons[0].UpdateSelectTexture(_buttonTxC, _buttonTxUnc);
         }
 
@@ -129,6 +138,11 @@ namespace FillTheCup.States
             _buttons[2].UpdateSelectTexture(_buttonTxC, _buttonTxUnc);
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie wszystkich elementów związanych wyborem opcji.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -143,11 +157,19 @@ namespace FillTheCup.States
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Metoda w której mogą być wykonywane czynności po funkcji <c>Update</c>.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void PostUpdate(GameTime gameTime)
         {
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za aktualizowanie stanów przycisków (aby można było w nie klikać).
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             foreach (var button in _buttons)
