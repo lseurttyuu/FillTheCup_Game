@@ -5,12 +5,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FillTheCup.Controls
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za przyciski (z naniesionymi teksturami).
+    /// </summary>
     public class Button : Component
     {
         #region Fields
 
         private MouseState _currentMouse;
-        private SpriteFont _font;
+        private readonly SpriteFont _font;
         private bool _isHovering;
         private MouseState _previousMouse;
         private Texture2D _texture;
@@ -21,11 +24,21 @@ namespace FillTheCup.Controls
 
 
         #region Properties
-
+        /// <summary>
+        /// Reprezentacja metody, która obsłuży zdarzenie bez dodatkowych danych o wydarzeniu.
+        /// </summary>
         public event EventHandler Click;
-        public bool Clicked { get; private set; }
+        /// <summary>
+        /// Kolor tekstu wyświetlanego w środku przycisku.
+        /// </summary>
         public Color PenColour { get; set; }
+        /// <summary>
+        /// Pozycja przycisku.
+        /// </summary>
         public Vector2 Position { get; set; }
+        /// <summary>
+        /// Prostokąt będący reprezentacją przycisku.
+        /// </summary>
         public Rectangle Rectangle
         {
             get
@@ -33,14 +46,21 @@ namespace FillTheCup.Controls
                 return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
             }
         }
-
+        /// <summary>
+        /// Tekst wyświetlany w środku przycisku.
+        /// </summary>
         public string Text { get; set; }
 
         #endregion
 
 
         #region Methods
-
+        /// <summary>
+        /// Konstruktor przycisku.
+        /// </summary>
+        /// <param name="texture">Tekstura dla przycisku w momencie kiedy myszka nie jest nad przyciskiem.</param>
+        /// <param name="texture_c">Tekstura dla przycisku w momencie kiedy myszja jest nad przyciskiem.</param>
+        /// <param name="font">Czcionka jaką ma się wyświetlać tekst w środku przycisku.</param>
         public Button(Texture2D texture, Texture2D texture_c, SpriteFont font)
         {
             _texture = texture;
@@ -49,6 +69,11 @@ namespace FillTheCup.Controls
             PenColour = Color.Black;
         }
 
+        /// <summary>
+        /// Rysowanie przycisku.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (_isHovering)
@@ -67,6 +92,10 @@ namespace FillTheCup.Controls
             }
         }
 
+        /// <summary>
+        /// Aktualizacja przycisku (czy myszka nie jest nad nim oraz czy nie został on wciśnięty).
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             _previousMouse = _currentMouse;
@@ -87,6 +116,11 @@ namespace FillTheCup.Controls
             }
         }
 
+        /// <summary>
+        /// Aktualizacja tekstur w celu wyróżnienia zaznaczonego przycisku (przydatne przy opcjach).
+        /// </summary>
+        /// <param name="selected">Tekstura aktualizowana dla przycisku, gdy myszka jest nad przyciskiem.</param>
+        /// <param name="unselected">Tekstura aktualizowana dla przycisku, gdy myszka nie jest nad przyciskiem.</param>
         public void UpdateSelectTexture(Texture2D selected, Texture2D unselected)
         {
             _texture_c = selected;

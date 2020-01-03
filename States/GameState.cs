@@ -13,6 +13,12 @@ using VelcroPhysics.Utilities;
 
 namespace FillTheCup.States
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za zarządzanie danym poziomem i wydarzeniami z nim związanym
+    /// (jest to znaczenie szersze od znaczenia "poziomu" zawartego w klasie <c>Level</c>).
+    /// Klasa istnieje od początku do końca danego poziomu, wliczając w to akcje takie jak
+    /// odliczanie czasu do początku poziomu, utworzenie ekranu po werdykcie, itp.
+    /// </summary>
     public class GameState : State
     {
         #region Fields
@@ -30,15 +36,44 @@ namespace FillTheCup.States
         private List<Song> _music;
         private static Random random = new Random();
 
+        /// <summary>
+        /// Całkowity wynik podczas danej rozgrywki.
+        /// </summary>
         public static int _totalScore = 0;
         private int _score = 0;
 
+        /// <summary>
+        /// Pole opisujące obecny stan poziomu (w szerokim znaczeniu słowa "poziom").
+        /// </summary>
         public int _innerState = 0;                                //variable resposible for states: begining (counter), choice+animation, lvl end screen
+        /// <summary>
+        /// Pole opisujące stan poprzedni danego poziomu.
+        /// </summary>
         public int _previousState = 0;
+        /// <summary>
+        /// Pole opisujące czas (na początku wynosi 0, rośnie do 4 --> czas na oczekiwanie przed
+        /// inicjalizacją obiektu klasy Level; Następnie pole <c>_timeElapsed</c> jest zerowane,
+        /// co pozwala kontrolować czas który upłynął od pojawienia się kubeczków na potrzeby
+        /// licznika czasu, a także systemu obliczania wyniku za dany poziom).
+        /// </summary>
         public float _timeElapsed = 0f;                             //gametime to measure start screen 3.. 2.. 1..
+        /// <summary>
+        /// Pole opisujące po jakim czasie została podjęta decyzja (wybór kubeczka).
+        /// </summary>
         private float _timeStamp = 0f;
+        /// <summary>
+        /// Pole opisujące numer rozgrywanego poziomu (nowa gra zawsze zaczyna się od poziomu 1).
+        /// </summary>
         public static int _lvlDifficulty = 1;                         //single level difficulty (number of cups)
+        /// <summary>
+        /// Pole opisujące poziom trudności wszystkich poziomów (ustawialne z poziomu ustawień gry).
+        /// Ma wpływ na maksymalny czas dostępny dla użytkownika na rozwiązanie problemu.
+        /// Dostępne wartości: 1 - poziom łatwy, 2 - poziom średni, 3 - poziom trudny.
+        /// </summary>
         public static int _globalLvlDifficulty = 1;                     //1 - easy, 2 - medium, 3 - hard (time restriction)
+        /// <summary>
+        /// Pole opisujące maksymalny czas na decyzję użytkownika (w sekundach). Jest zmieniany przez konstruktor klasy Level dla poziomów >= 10.
+        /// </summary>
         public static float _maxPlayerTime;
         private readonly float _maxTimeEasyDef = 10;
         private readonly float _maxTimeMediumDef = 5;
@@ -48,6 +83,12 @@ namespace FillTheCup.States
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor klasy <c>GameState</c>. Jest zgodny z klasą abstrakcyjną State.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             _background = _content.Load<Texture2D>("World/background");
@@ -88,6 +129,11 @@ namespace FillTheCup.States
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie wszystkich elementów związanych z danym poziomem.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
@@ -134,11 +180,19 @@ namespace FillTheCup.States
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Metoda w której mogą być wykonywane czynności po funkcji <c>Update</c>.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void PostUpdate(GameTime gameTime)
         {
             
         }
 
+        /// <summary>
+        /// Aktualizowanie całej logiki danego poziomu.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
 

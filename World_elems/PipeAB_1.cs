@@ -11,7 +11,10 @@ using VelcroPhysics.Utilities;
 
 namespace FillTheCup.World_elems
 {
-    class PipeAB_1 : Pipe
+    /// <summary>
+    /// Klasa definiująca rury razem z ich blokadami. Dostępne są 2 rodzaje rur (po prawej i po lewej stronie) z różnymi blokadami.
+    /// </summary>
+    public class PipeAB_1 : Pipe
     {
         #region PipeDefinition
 
@@ -50,6 +53,17 @@ namespace FillTheCup.World_elems
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor 1 rury w danym poziomie <c>Level</c>.
+        /// </summary>
+        /// <param name="world">Fizyczny świat VelcroPhysics utworzony w klasie <c>Level</c>.</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="startX">Współrzędna X początkowa rury (punkt zaczepienia).</param>
+        /// <param name="startY">>Współrzędna Y początkowa rury (punkt zaczepienia).</param>
+        /// <param name="endX">Współrzędna X końcowa rury (punkt zaczepienia). Definiowana przez współrzędną X niższego kubeczka.</param>
+        /// <param name="pipeType">Rodzaj rury. -1 oznacza rurę z lewej strony, 0 oznacza rurę z prawej strony.</param>
+        /// <param name="canBlock">Zmienna mówiąca czy w rurze może wystąpić blokada przepływu.</param>
+        /// <param name="mustBlock">Zmienna mówiąca czy w rurze musi wystąpić blokada przepływu.</param>
         public PipeAB_1(World world, GraphicsDevice graphicsDevice, int startX, int startY, int endX, int pipeType, bool canBlock, bool mustBlock)
         {
             _startX = startX;
@@ -140,7 +154,11 @@ namespace FillTheCup.World_elems
 
         }
 
-
+        /// <summary>
+        /// Rysowanie rur wraz z blokadami.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for (int i = 0; i < _partsNumber; i++)
@@ -150,11 +168,19 @@ namespace FillTheCup.World_elems
                 spriteBatch.Draw(_blockadeSprite, ConvertUnits.ToDisplayUnits(_blockadeBody.Position), null, Color.White, 0f, _blockadeOrigin, 1f, SpriteEffects.None, 0f);
         }
 
+        /// <summary>
+        /// Aktualizacja; Nieużywana w tej klasie!
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Funkcja odpowiedzialna za stworzenie i wyliczenie pozycji rury po lewej stronie.
+        /// </summary>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
         private void ConstructPipeA(GraphicsDevice graphicsDevice)
         {
             _pipeSprites.Add(new Texture2D(graphicsDevice, _topLineWidth, _lineWidth));                                                                                 //top line
@@ -174,7 +200,10 @@ namespace FillTheCup.World_elems
             _colorSprites.Add(new Color[_lineWidth * (int)(graphicsDevice.Viewport.Height / 64)]);                                                                                         //vertical right line
         }
 
-
+        /// <summary>
+        /// Funkcja odpowiedzialna za stworzenie i wyliczenie pozycji rury po prawej stronie.
+        /// </summary>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
         private void ConstructPipeB(GraphicsDevice graphicsDevice)
         {
             _pipeSprites.Add(new Texture2D(graphicsDevice, _topLineWidth, _lineWidth));                                                                                 //top line

@@ -17,6 +17,9 @@ namespace FillTheCup
 
         private State _currentState;
         private State _nextState;
+        /// <summary>
+        /// Pole służące do analizy stanu muzyki grającej w tle gry.
+        /// </summary>
         public short _musicPlaying = -2;          //means not playing anything
 
         #endregion
@@ -24,11 +27,16 @@ namespace FillTheCup
         #region Methods
 
 
+        /// <summary>
+        /// Konstruktor klasy definiującej grę.
+        /// </summary>
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1024;
-            graphics.PreferredBackBufferHeight = 768;
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1024,
+                PreferredBackBufferHeight = 768
+            };
             Content.RootDirectory = "Content";
         }
 
@@ -65,6 +73,10 @@ namespace FillTheCup
         }
 
 
+        /// <summary>
+        /// Metoda ChangeState pozwala przejść do następnego etapu gry (np. z menu do poziomu 1).
+        /// </summary>
+        /// <param name="state"></param>
         public void ChangeState(State state)
         {
             _nextState = state;

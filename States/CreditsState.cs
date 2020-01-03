@@ -12,20 +12,29 @@ using System.Threading.Tasks;
 
 namespace FillTheCup.States
 {
-    class CreditsState : State
+    /// <summary>
+    /// Klasa odpowiedzialna za ekran "O grze".
+    /// </summary>
+    public class CreditsState : State
     {
         #region Fields
 
         private Texture2D _background;
         private SpriteFont _levelTitle;
         private SpriteFont _smallerFont;
-        private Button _backButton;
+        private Button backButton;
         private Song _creditsMusic;
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor stanu z ekranem "O grze". Jest zgodny z klasą abstrakcyjną State.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
         public CreditsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             _background = new Texture2D(_graphicsDevice, _graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height);
@@ -44,13 +53,13 @@ namespace FillTheCup.States
             var buttonTxUnc = _content.Load<Texture2D>("Controls/btn_unc_small");
             var buttonTxC = _content.Load<Texture2D>("Controls/btn_c_small");
 
-            _backButton = new Button(buttonTxUnc, buttonTxC, _smallerFont)
+            backButton = new Button(buttonTxUnc, buttonTxC, _smallerFont)
             {
                 Position = new Vector2(_graphicsDevice.Viewport.Width/60f, _graphicsDevice.Viewport.Height / 1.1f),
                 Text = "Back",
             };
 
-            _backButton.Click += _backButton_Click;
+            backButton.Click += BackButton_Click;
 
 
 
@@ -62,11 +71,16 @@ namespace FillTheCup.States
             _background.SetData(backgroundColor);
         }
 
-        private void _backButton_Click(object sender, EventArgs e)
+        private void BackButton_Click(object sender, EventArgs e)
         {
             _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie wszystkich elementów związanych z informacjami o autorze.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -77,19 +91,27 @@ namespace FillTheCup.States
             spriteBatch.DrawString(_smallerFont, "lseurttyuu", new Vector2(_graphicsDevice.Viewport.Width / 3f, _graphicsDevice.Viewport.Height / 4.4f), Color.White);
             spriteBatch.DrawString(_smallerFont, "Music", new Vector2(_graphicsDevice.Viewport.Width / 15f, _graphicsDevice.Viewport.Height / 3.7f), Color.White);
             spriteBatch.DrawString(_smallerFont, "Bensound (Royalty free music)", new Vector2(_graphicsDevice.Viewport.Width / 3f, _graphicsDevice.Viewport.Height / 3.7f), Color.White);
-            _backButton.Draw(gameTime, spriteBatch);
+            backButton.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Metoda w której mogą być wykonywane czynności po funkcji <c>Update</c>.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void PostUpdate(GameTime gameTime)
         {
             
         }
 
+        /// <summary>
+        /// Aktualizacja, umożliwia nawigowanie z ekranu "O grze" do menu głównego.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
-            _backButton.Update(gameTime);
+            backButton.Update(gameTime);
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));

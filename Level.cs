@@ -14,20 +14,48 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace FillTheCup
 {
+    /// <summary>
+    /// Klasa definiująca konkretny poziom (ułożenie kubeczków, istnienie świata w znaczeniu fizycznym - generowanie świata opartego na fizyce VelcroPhysics)
+    /// </summary>
     public class Level
     {
 
         #region Fields
 
+        /// <summary>
+        /// Obiekt _content dla dostępu do zawartości ładowanej przez Monogame Content Pipeline
+        /// </summary>
         protected ContentManager _content;
+        /// <summary>
+        /// Obiekt _game dla możliwości utworzenia nowego stanu (kolejny poziom/koniec gry - menu)
+        /// </summary>
         protected Game1 _game;
+        /// <summary>
+        /// Obiekt _gameState dla możliwości zmiany parametrów poziomu w szerszym znaczeniu słowa (stan poza faktycznym "poziomem").
+        /// </summary>
         protected GameState _gameState;
+        /// <summary>
+        /// Pole _graphicsDevice służące dla dostępu do właściwości i pól okna graficznego
+        /// </summary>
         protected GraphicsDevice _graphicsDevice;
 
+        /// <summary>
+        /// Informacja czy użytkownik wybrał już jakiś kubeczek, czy też nie.
+        /// </summary>
         public bool _hasChosen = false;                                    //for 2 states: choice (0) and animation (1)
-        public int _cupChosen = 0;                                         //to be filled with number of a cup that has been choosen
-        private int _cupWon = 0;
+        /// <summary>
+        /// Informacja jaki numer kubeczka został wybrany.
+        /// <example>Użytkownik wybrał kubeczek nr 2 - zmienna przyjmuje wartość 2.</example>
+        /// </summary>
+        public short _cupChosen = 0;                                         //to be filled with number of a cup that has been choosen
+        private short _cupWon = 0;
+        /// <summary>
+        /// Informacja czy użytkownik wygrał rundę, czy też nie (w znaczeniu: czy przegrał).
+        /// </summary>
         public bool _hasWon = false;                                       //information to know what trigger after particular level is finished
+        /// <summary>
+        /// Informacja czy nastąpił koniec poziomu (w znaczeniu: wraz z werdyktem uznaje się koniec poziomu w klasie "Level")
+        /// </summary>
         public bool _endLvl = false;                                       //if level ended - trigger next state in GameState
 
         private readonly World _physxWorld;
@@ -42,19 +70,38 @@ namespace FillTheCup
         private Vector2 _barPos;
         private Timer _timer;
         private List<SoundEffect> _soundEffects;
+        /// <summary>
+        /// Pole opisujące stan efektu dźwiękowego (początek dźwięku spadania wody).
+        /// </summary>
         public SoundEffectInstance _waterStart;
+        /// <summary>
+        /// Pole opisujące stan efektu dźwiękowego (powtarzający się dźwięk spania wody).
+        /// </summary>
         public SoundEffectInstance _waterLoop;
+        /// <summary>
+        /// Pole opisujące stan efektów dźwiękowych dla danego poziomu (początek dźwięku spadania należy
+        /// odwtorzyć dokładnie 1 raz, po skończeniu tego odwtorzenia należy zapoczątkować zapętlony
+        /// dźwięk _waterLoop).
+        /// </summary>
         public short _soundFxState = 0;
 
         private int _updateCounter;
         private static readonly int _dropsStrength = 3;             // the lower number - the more drops are generated (linearly) - from 1 to inf;
 
-        private Random random;
+        private readonly Random random;
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor konkretnego poziomu klasy Level.
+        /// </summary>
+        /// <param name="gameState">Obecny stan gry (gameState) klasy GameState.</param>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
+        /// <param name="difficulty">Poziom który ma zostać utworzony (1, 2, 3, 4, 5, itd.)</param>
         public Level(GameState gameState, Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int difficulty)
         {
             _game = game;
@@ -229,6 +276,11 @@ namespace FillTheCup
         }
 
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie kubeczków, kranu, paska z pozostałym czasem, rur i kropel wody.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_bar, _barPos, Color.White);
@@ -252,6 +304,11 @@ namespace FillTheCup
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za werdykt wygranej/przegranej danego poziomu. Aktualizowanie świata fizycznego.
+        /// Optymalizacja wykorzystania zasobów.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public void Update(GameTime gameTime)
         {
             if (_hasChosen)
@@ -271,10 +328,10 @@ namespace FillTheCup
                 if (_endLvl == false)
                     if (_cupWon == 0)
                     {
-                        int currentCup = 1;
+                        short currentCup = 1;
                         foreach (var cup in _cups)
                         {
-                            int drops_inside = 0;
+                            short drops_inside = 0;
 
                             foreach (Drop drop in _drops)
                                 if (ConvertUnits.ToDisplayUnits(drop._drop.Position).X > cup._posX - Cup._cup_X / 2 &&
@@ -331,6 +388,11 @@ namespace FillTheCup
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za aktualizację pozycji paska z pozostałym czasem.
+        /// </summary>
+        /// <param name="timeElapsed">Czas który upłynął od początku poziomu (tj. odkąd pojawiły się kubeczki).</param>
+        /// <param name="maxPlayerTime">Maksymalny czas na podjęcie decyzji.</param>
         public void UpdateBar(float timeElapsed, float maxPlayerTime)
         {
             _barPos.X = (int)(_graphicsDevice.Viewport.Width / 2 - _bar.Width / 2 - _bar.Width*timeElapsed/maxPlayerTime);

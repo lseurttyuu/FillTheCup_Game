@@ -20,9 +20,21 @@ namespace FillTheCup.Controls
 
         string[] _infoText = { "Well done!", "Game over", "Score:", "Total score:","","" };
 
+        /// <summary>
+        /// Obiekt _content dla dostępu do zawartości ładowanej przez Monogame Content Pipeline
+        /// </summary>
         protected ContentManager _content;
+        /// <summary>
+        /// Obiekt _game dla możliwości utworzenia nowego stanu (kolejny poziom/koniec gry - menu)
+        /// </summary>
         protected Game1 _game;
+        /// <summary>
+        /// Obiekt _level dla dostępu do pól dotyczących obsługi efektów dźwiękowych
+        /// </summary>
         protected Level _level;
+        /// <summary>
+        /// Pole _graphicsDevice służące dla dostępu do właściwości i pól okna graficznego
+        /// </summary>
         protected GraphicsDevice _graphicsDevice;
         private List<SpriteFont> _spriteFonts;              //From BIG ones to small ones; Just like in html - h0, h1, etc
         private Texture2D _layerTrans;
@@ -40,6 +52,16 @@ namespace FillTheCup.Controls
 
 
         #region Methods
+        /// <summary>
+        /// Konstruktor klasy TransBoard umożliwia utworzenie nowego ekranu przejściowego.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="level">Obecny poziom (klasa Level).</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
+        /// <param name="score">Uzyskany wynik za dopiero co zagrany poziom.</param>
+        /// <param name="totalScore">Uzyskany dotychczas wynik całkowity (wszystkie poprzednie poziomy).</param>
+        /// <param name="hasWon">Zmienna mówiąca, czy dopiero co rozegrany poziom zakończył się sukcesem (true), czy porażką (false).</param>
         public TransBoard(Game1 game, Level level, GraphicsDevice graphicsDevice, ContentManager content, int score, int totalScore, bool hasWon)
         {
             _game = game;
@@ -150,6 +172,12 @@ namespace FillTheCup.Controls
             _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie tablicy przejściowej. Brak <c>spriteBarch.Begin()</c> oraz <c>spriteBatch.End()</c>
+        /// jest spowodowane występowaniem tych wywołań w klasie wyższej.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_layerTrans, new Vector2(0, 0), Color.White);
@@ -175,6 +203,10 @@ namespace FillTheCup.Controls
             
         }
 
+        /// <summary>
+        /// Aktualizowanie przycisków będących na rysowanej tablicy.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             foreach (var component in _buttons)

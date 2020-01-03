@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace FillTheCup.States
 {
+    /// <summary>
+    /// Klasa odpowiedzialna za wyświetlanie menu głównego wraz ze wszystkimi
+    /// obecnymi tam elementami.
+    /// </summary>
     public class MenuState : State
     {
         #region Fields
@@ -23,6 +27,12 @@ namespace FillTheCup.States
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor klasy <c>MenuState</c>. Jest zgodny z klasą abstrakcyjną State.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
             var buttonTxUnc = _content.Load<Texture2D>("Controls/btn_unc");
@@ -40,7 +50,7 @@ namespace FillTheCup.States
                 Text = "New game",
             };
 
-            newGameButton.Click += newGameButton_Click;
+            newGameButton.Click += NewGameButton_Click;
 
 
             var optionsButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
@@ -61,13 +71,13 @@ namespace FillTheCup.States
             creditsButton.Click += CreditsButton_Click;
 
 
-            var ExitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
+            var exitButton = new Button(buttonTxUnc, buttonTxC, buttonFont)
             {
                 Position = new Vector2(_graphicsDevice.Viewport.Width / 2 - buttonTxUnc.Width / 2, (int)_graphicsDevice.Viewport.Height / 1.3f),
                 Text = "Exit",
             };
 
-            ExitButton.Click += QuitButton_Click;
+            exitButton.Click += QuitButton_Click;
 
 
             _components = new List<Component>()
@@ -75,7 +85,7 @@ namespace FillTheCup.States
                 newGameButton,
                 optionsButton,
                 creditsButton,
-                ExitButton,
+                exitButton,
             };
 
             #region Music
@@ -118,13 +128,18 @@ namespace FillTheCup.States
             _game.Exit();
         }
 
-        private void newGameButton_Click(object sender, EventArgs e)
+        private void NewGameButton_Click(object sender, EventArgs e)
         {
             GameState._lvlDifficulty = 1;
             GameState._totalScore = 0;
             _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie wszystkich elementów związanych z menu głównym gry.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -140,11 +155,19 @@ namespace FillTheCup.States
             spriteBatch.End();
         }
 
+        /// <summary>
+        /// Metoda w której mogą być wykonywane czynności po funkcji <c>Update</c>.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void PostUpdate(GameTime gameTime)
         {
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za aktualizowanie stanów przycisków (aby można było w nie klikać).
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             foreach (var component in _components)

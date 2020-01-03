@@ -4,7 +4,7 @@ namespace FillTheCup
 {
 #if WINDOWS || LINUX
     /// <summary>
-    /// Główna klasa
+    /// Główna klasa programu.
     /// </summary>
     public static class Program
     {

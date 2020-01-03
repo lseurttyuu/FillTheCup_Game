@@ -11,11 +11,17 @@ using VelcroPhysics.Utilities;
 
 namespace FillTheCup.World_elems
 {
-    class Drop : Component
+    /// <summary>
+    /// Klasa odpowiedzialna za pojedynnczą kroplę wody.
+    /// </summary>
+    public class Drop : Component
     {
         #region Fields
 
         GraphicsDevice _graphicsDevice;
+        /// <summary>
+        /// Fizyczna instancja kropli.
+        /// </summary>
         public Body _drop;
         private Texture2D _dropSprite;
         private Vector2 _dropOrigin;
@@ -26,6 +32,13 @@ namespace FillTheCup.World_elems
         #region Methods
 
 
+        /// <summary>
+        /// Stworzenie jednej kropli tam, gdzie jest kran.
+        /// </summary>
+        /// <param name="dropSprite">Tekstura kropli.</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice).</param>
+        /// <param name="_world">Świat fizyczny <c>VelcroPhysics</c> utworzony w klasie <c>Level</c>.</param>
+        /// <param name="variance">Odchyłka pozycji generowanej kropli (lepsze wrażenia artystyczne).</param>
         public Drop(Texture2D dropSprite ,GraphicsDevice graphicsDevice, World _world, int variance)
         {
             _graphicsDevice = graphicsDevice;
@@ -46,17 +59,30 @@ namespace FillTheCup.World_elems
 
         }
 
+        /// <summary>
+        /// Rysowanie pojedynczej kropli.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_dropSprite, ConvertUnits.ToDisplayUnits(_drop.Position), null, Color.White, _drop.Rotation, _dropOrigin, 1f, SpriteEffects.None, 0f);
         }
 
+        /// <summary>
+        /// Aktualizacja; Nieużywana w tej klasie!
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             throw new NotImplementedException();
         }
 
 
+        /// <summary>
+        /// Sprawdza, czy kropla nie wyszła poza ekran (w uproszczeniu).
+        /// </summary>
+        /// <returns>Jeżeli kropla wyszła poza wskazany obszar - wartość <c>true</c>.</returns>
         public bool CheckPos()
         {
             int posX = (int)ConvertUnits.ToDisplayUnits(_drop.Position.X);

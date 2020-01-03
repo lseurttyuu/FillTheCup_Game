@@ -12,34 +12,71 @@ using VelcroPhysics.Utilities;
 
 namespace FillTheCup.World_elems
 {
-    class Cup : Component
+    /// <summary>
+    /// Klasa odpowiedzialna za definicję i stworzenie pojedynczego kubeczka.
+    /// </summary>
+    public class Cup : Component
     {
         #region Fields
 
         #region CupDefinition
+
         //All numbers below should be even!
+        /// <summary>
+        /// Szerokość kubeczka.
+        /// </summary>
         public static readonly int _cup_X = 104;
+        /// <summary>
+        /// Wysokość kubeczka.
+        /// </summary>
         public static readonly int _cup_Y = 128;                //static dimensions of a cup
 
+        /// <summary>
+        /// Współrzędna X kubeczka (środek).
+        /// </summary>
         public readonly int _posX;
+        /// <summary>
+        /// Współrzędna Y kubeczka (środek).
+        /// </summary>
         public readonly int _posY;
 
         private static readonly int _minDistanceBottom = 8;
         private static readonly int _maxDistanceTop = 20;       //static restrictions of joining point height related to a cup (vertical restrictions)
 
+        /// <summary>
+        /// Szerokość rury (liczona zewnętrznie).
+        /// </summary>
         public static readonly int _pipeWidth = 40;             //outer dimensions!
+        /// <summary>
+        /// Szerokość linii rysującej obiekty.
+        /// </summary>
         public static readonly int _lineWidth = 4;
         private int _partsNumber;
 
         #endregion
 
         private Button _clicker;
-        private int _cupNumber;
+        private short _cupNumber;
+        /// <summary>
+        /// Obiekt klasy <c>Level</c> (wymagana dostępność do pól).
+        /// </summary>
         protected Level _level;
 
+        /// <summary>
+        /// Współrzędna X początku rury z lewej strony.
+        /// </summary>
         public int _pipeA_X;
+        /// <summary>
+        /// Współrzędna Y początku rury z lewej strony.
+        /// </summary>
         public int _pipeA_Y;                                   //coordinates to connect pipes (A - left pipe, B - right pipe)
+        /// <summary>
+        /// Współrzędna X początku rury z prawej strony.
+        /// </summary>
         public int _pipeB_X;
+        /// <summary>
+        /// Współrzędna Y początku rury z prawej strony.
+        /// </summary>
         public int _pipeB_Y;
 
         private List<Texture2D> _cupSprites;                   //every cup has 5 parts: bottom, 2 left, 2 right;
@@ -55,7 +92,17 @@ namespace FillTheCup.World_elems
 
         #region Methods
 
-        public Cup(Level level, World world, GraphicsDevice graphicsDevice, int posX, int posY, int partsNumber, int cupNumber)
+        /// <summary>
+        /// Konstruktor kubeczka (wywołanie z klasy <c>Level</c>).
+        /// </summary>
+        /// <param name="level">Dostęp do obecnego poziomu (klasa <c>Level</c>).</param>
+        /// <param name="world">Fizyczny świat VelcroPhysics utworzony w klasie <c>Level</c>.</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="posX">Współrzędna X kubeczka (środek).</param>
+        /// <param name="posY">>Współrzędna Y kubeczka (środek).</param>
+        /// <param name="partsNumber">Liczba części składających się na kubeczek. 3-częściowy kubeczek jest zamknięty (brak dziur), do 5-częściowego kubeczka można podłączyć rury.</param>
+        /// <param name="cupNumber">Numer kubeczka. Wywoując konstruktor należy numerować kubeczki kolejno od 1 do ostatniego kubeczka.</param>
+        public Cup(Level level, World world, GraphicsDevice graphicsDevice, int posX, int posY, int partsNumber, short cupNumber)
         {
             _level = level;
             _partsNumber = partsNumber;
@@ -103,13 +150,16 @@ namespace FillTheCup.World_elems
         }
 
 
-
+        /// <summary>
+        /// Konstrukcja kubeczka cieknącego (5-elementowego).
+        /// </summary>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
         private void ConstructLeaky(GraphicsDevice graphicsDevice)
         {
             random = new Random();
 
             int pipeA_relative_Y = random.Next((_maxDistanceTop + _pipeWidth / 2) / 2, (_cup_Y - _minDistanceBottom - _pipeWidth / 2) / 2);
-            int pipeB_relative_Y = 0;
+            int pipeB_relative_Y;
             do
             {
                 pipeB_relative_Y = random.Next((_maxDistanceTop + _pipeWidth / 2) / 2, (_cup_Y - _minDistanceBottom - _pipeWidth / 2) / 2);
@@ -145,6 +195,10 @@ namespace FillTheCup.World_elems
 
         }
 
+        /// <summary>
+        /// Konstrukcja kubeczka szczelnego (3-elementowego).
+        /// </summary>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
         private void ConstructEnclosed(GraphicsDevice graphicsDevice)
         {
             _cupSprites.Add(new Texture2D(graphicsDevice, _lineWidth, _cup_Y));                                         //left line
@@ -158,7 +212,11 @@ namespace FillTheCup.World_elems
         }
 
 
-
+        /// <summary>
+        /// Rysowanie kubeczków wraz z elementem <c>Button</c> będącym w celu wybrania prawidłowego kubeczka (podczas gry).
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for(int i=0; i<_partsNumber; i++)
@@ -168,6 +226,10 @@ namespace FillTheCup.World_elems
             
         }
 
+        /// <summary>
+        /// Aktualizacja możliwości naciskania na kubeczki (<c>Button</c>).
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             if(!_level._endLvl)
@@ -175,6 +237,12 @@ namespace FillTheCup.World_elems
         }
 
 
+        /// <summary>
+        /// Funkcja tworząca obiekt typu <c>Button</c> o rozmiarach równych rozmiarowi kubeczka.
+        /// </summary>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="posX">Współrzędna X kubeczka (środek).</param>
+        /// <param name="posY">Współrzędna Y kubeczka (środek).</param>
         private void CreateButton(GraphicsDevice graphicsDevice, int posX, int posY)
         {
             Texture2D clickerTxC = new Texture2D(graphicsDevice, _cup_X, _cup_Y);

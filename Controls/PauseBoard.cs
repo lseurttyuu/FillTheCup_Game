@@ -10,15 +10,33 @@ using System.Threading.Tasks;
 
 namespace FillTheCup.Controls
 {
-    class PauseBoard : Component
+    /// <summary>
+    /// Klasa odpowiedzialna za ekran pauzy.
+    /// </summary>
+    public class PauseBoard : Component
     {
 
         #region Fields
 
+        /// <summary>
+        /// Obiekt _game dla możliwości utworzenia nowego stanu (kolejny poziom/koniec gry - menu).
+        /// </summary>
         protected Game1 _game;
+        /// <summary>
+        /// Obiekt _level dla dostępu do pól dotyczących obsługi efektów dźwiękowych.
+        /// </summary>
         protected Level _level;
+        /// <summary>
+        /// Obecny stan reprezentujący dany poziom (w szerokim znaczeniu). Służy do zastosowania kary czasowej za pauzę gry.
+        /// </summary>
         protected GameState _gameState;
+        /// <summary>
+        /// Pole _graphicsDevice służące dla dostępu do właściwości i pól okna graficznego
+        /// </summary>
         protected GraphicsDevice _graphicsDevice;
+        /// <summary>
+        /// Obiekt _content dla dostępu do zawartości ładowanej przez Monogame Content Pipeline
+        /// </summary>
         protected ContentManager _content;
 
         private List<Component> _components;
@@ -30,6 +48,14 @@ namespace FillTheCup.Controls
 
         #region Methods
 
+        /// <summary>
+        /// Konstruktor ekranu pauzy umożliwia stworzenie nowego ekranu pauzy.
+        /// </summary>
+        /// <param name="game">Instancja gry (klasa Game1)</param>
+        /// <param name="gameState">Obecna instancja poziomu (stan <c>GameState</c>).</param>
+        /// <param name="level">Obecny poziom (klasa Level).</param>
+        /// <param name="graphicsDevice">Obecnie używane pole graficzne (klasa GraphicsDevice)</param>
+        /// <param name="content">Obecny Content Manager od Monogame (klasa ContentManager)</param>
         public PauseBoard(Game1 game, GameState gameState, Level level, GraphicsDevice graphicsDevice, ContentManager content)
         {
             _game = game;
@@ -105,6 +131,12 @@ namespace FillTheCup.Controls
 
         }
 
+        /// <summary>
+        /// Metoda odpowiedzialna za rysowanie tablicy pauzy. Brak <c>spriteBarch.Begin()</c> oraz <c>spriteBatch.End()</c>
+        /// jest spowodowane występowaniem tych wywołań w klasie wyższej.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
+        /// <param name="spriteBatch">Poborca wszystkich elementów graficznych, zainicjalizowany w klasie wyżej.</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
@@ -115,6 +147,10 @@ namespace FillTheCup.Controls
                 component.Draw(gameTime, spriteBatch);
         }
 
+        /// <summary>
+        /// Aktualizowanie przycisków będących na rysowanej tablicy.
+        /// </summary>
+        /// <param name="gameTime">Czas gry.</param>
         public override void Update(GameTime gameTime)
         {
             foreach (var component in _components)
